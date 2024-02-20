@@ -41,8 +41,8 @@ app.use('/api/image-service', require('./src/routes/courses/imageRoutes'))
 app.use('/api/users', require('./src/routes/users/userRoutes'))
 app.use('/api/profiles', require('./src/routes/users/profileRoutes'))
 app.use('/api/quizztypes', require('./src/routes/courses/quizzTypeRoutes'));
-app.use('/flashcard', require('./src/routes/courses/flashCardRoutes'));
-app.use('/coursestudent', require('./src/routes/courses/courseStudentRoutes'));
+app.use('/api/flashcard', require('./src/routes/courses/flashCardRoutes'));
+app.use('/api/coursestudent', require('./src/routes/courses/courseStudentRoutes'));
 app.use('/api/evaluationresults', require('./src/routes/courses/evaluationResultRoutes'));
 
 app.use('/api/prequizz', require('./src/routes/courses/prequizzRoutes'));
@@ -53,5 +53,5 @@ SocketService(server);
 
 
 server.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT} \nhttp://localhost:4100/ 🚀`);
+  console.log(`Server is running 🚀🚀🚀`);
 });
