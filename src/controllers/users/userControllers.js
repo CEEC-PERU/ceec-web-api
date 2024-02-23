@@ -90,5 +90,17 @@ async function getCourseStudentsStatistics(req, res) {
     console.error(error);
     res.status(500).json({ message: 'Error al obtener estadísticas de estudiantes de cursos.' });
   }
+};
+
+async function getUsersNotEnrolledInCourse(req, res) {
+  try {
+    const { course_id } = req.params;
+    const studentsNotEnrolled = await userService.findUsersNotEnrolledInCourse(course_id);
+
+    res.json(studentsNotEnrolled);
+  } catch (error) {
+    console.error('Error al obtener estudiantes no inscritos:', error);
+    res.status(500).json({ error: 'Error al obtener estudiantes no inscritos. Consulta los registros para más detalles.' });
+  }
 }
-module.exports = { createUser, getUserById, updateUser, deleteUser, getAllUsers, getCourseStudentsStatistics };
+module.exports = { createUser, getUserById, updateUser, deleteUser, getAllUsers, getCourseStudentsStatistics, getUsersNotEnrolledInCourse };

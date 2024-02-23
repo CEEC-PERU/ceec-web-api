@@ -17,28 +17,30 @@ async function createUser(userData) {
 }
 
 
-async function getAllCourseStudentsWithDetails() {
+async function getAllCourseStudentsWithDetails(course_id) {
   try {
     const result = await CourseStudent.findAll({
       attributes: ['progress', 'is_approved'],
       include: [
         {
           model: User,
-          attributes: ['email', 'role_id'],
+          attributes: ['email', 'role_id', 'user_id'],
           include: [
             {
               model: Profile,
-              attributes: ['first_name', 'last_name', 'phone'],
+              attributes: ['first_name', 'last_name', 'phone', 'profile_picture'],
             },
           ],
         },
         {
           model: Course,
           attributes: ['name'],
+          where: course_id ? { course_id } : {}
+          ,
           include: [
             {
-              model: Module, 
-              attributes: ['name', 'is_active'], 
+              model: Module,
+              attributes: ['name', 'is_active'],
               as: 'modules',
             },
           ],
@@ -71,15 +73,45 @@ async function getAllUsers() {
 
 async function getStudentsQuantity() {
   try {
-    const studentQuantity = User.findAll({
+    const studentQuantity = await User.count({
       where: {
         role_id: 1,
       }
     });
-    return (await studentQuantity).length;
+    return studentQuantity;
   } catch (error) {
     console.error('Error al obtener la cantidad de estudiantes:', error);
     throw new Error('Error al obtener la cantidad de estudiantes. Detalles en la consola.');
+  }
+}
+
+async function findUsersNotEnrolledInCourse(course_id) {
+  try {
+    const usersNotEnrolled = await User.findAll({
+      attributes: ['user_id', 'email', 'role_id'],
+      include: [
+        {
+          model: CourseStudent,
+          attributes: ['course_id'],
+          where: {
+            course_id
+          },
+          required: false
+        },
+        {
+          model: Profile,
+          attributes: ['first_name', 'last_name', 'phone', 'profile_picture'],
+        }
+      ],
+      where: {
+        role_id: 1,
+        '$CourseStudents.course_id$': null
+      }
+    });
+    return usersNotEnrolled;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error at get students not enrolled');
   }
 }
 
@@ -91,5 +123,6 @@ module.exports = {
   deleteUser,
   getAllUsers,
   getAllCourseStudentsWithDetails,
-  getStudentsQuantity
+  getStudentsQuantity,
+  findUsersNotEnrolledInCourse
 };

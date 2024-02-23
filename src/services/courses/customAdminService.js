@@ -18,6 +18,7 @@ exports.getCoursesByUser = async (user_id) => {
     try {
         const user = await User.findByPk(user_id);
         const courses = await user.getCourses();
+        console.log("cursos de la funcion: ", JSON.stringify(courses, null, 2));
         if (courses) {
             return courses;
         } else {
@@ -36,7 +37,7 @@ exports.getCoursesAndUsers = async () => {
         const courses = await Course.findAll();
         const studentCourses = await CourseStudent.findAll();
         courses.forEach(course => {
-            const coursesOfUsers = []; 
+            const coursesOfUsers = [];
             studentCourses.forEach(studentCourse => {
                 if (course.course_id === studentCourse.course_id) {
                     const user = users.find(user => user.user_id === studentCourse.user_id);

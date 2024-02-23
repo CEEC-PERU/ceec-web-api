@@ -28,7 +28,7 @@ const CourseStudent = sequelize.define('CourseStudent', {
   },
   is_approved: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,
+    defaultValue: null,
   },
   created_at: {
     type: DataTypes.DATE,

@@ -39,6 +39,9 @@ const Course = sequelize.define('Course', {
   },
   image: {
     type: DataTypes.TEXT,
+  },
+  background_color: {
+    type: DataTypes.STRING(7),
   }
 }, {
   tableName: 'courses',

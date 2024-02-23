@@ -65,7 +65,8 @@ exports.getCourseStudentsByUserId = async (req, res) => {
 
 exports.getAllCourseStudentsWithDetails = async (req, res) => {
   try {
-    const courseStudents = await userService.getAllCourseStudentsWithDetails();
+    const { course_id } = req.params;
+    const courseStudents = await userService.getAllCourseStudentsWithDetails(course_id);
     res.json(courseStudents);
   } catch (error) {
     console.error(error);
@@ -74,3 +75,23 @@ exports.getAllCourseStudentsWithDetails = async (req, res) => {
 }
 
 
+
+exports.postCourseStudents = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { course_student_list } = req.body;
+    if (!Array.isArray(course_student_list)) throw new Error('Invalid request');
+    const courseStudents = await Promise.all(course_student_list.map(async (course_student) => {
+      await courseStudentService.saveCourseStudent(course_student);
+    }));
+
+    if (courseStudents) {
+      res.status(200).json({ message: 'Estudiantes agregados satisfactoriamente' });
+    } else {
+      throw new Error('Los estudiantes no fueron agregados');
+    };
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: error.message });
+  }
+}

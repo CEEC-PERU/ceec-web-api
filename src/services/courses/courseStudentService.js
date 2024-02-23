@@ -85,3 +85,12 @@ exports.getAllCourseStudentsByCourseId = async (course_id) => {
   }
 }
 
+exports.saveCourseStudent = async (course_student) => {
+  try {
+    const courseStudent = await CourseStudent.create(course_student);
+    return courseStudent;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
