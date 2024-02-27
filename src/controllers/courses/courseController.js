@@ -48,9 +48,9 @@ exports.createCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
   const courseId = req.params.id;
-  const { name, description, state, duration, is_active, image } = req.body;
+  const { name, description, state, duration, is_active, image , logo } = req.body;
   try {
-    const updatedCourse = await courseService.updateCourse(courseId, { name, description, state, duration, is_active, image });
+    const updatedCourse = await courseService.updateCourse(courseId, { name, description, state, duration, is_active, image, logo });
     if (updatedCourse) {
       res.json(updatedCourse);
     } else {

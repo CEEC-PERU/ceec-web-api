@@ -63,30 +63,33 @@ exports.deleteEvaluationResult = async (resultId) => {
 
 exports.getResultsByEvaluationId = async (evaluationId) => {
   try {
-    const results = await EvaluationResult.findAll({
-      where: {
-        evaluation_id: evaluationId,
-      },
-      include: [
-        {
-          model: User,
+      const results = await EvaluationResult.findAll({
+          where: {
+              evaluation_id: evaluationId,
+          },
           include: [
-            {
-              model: Profile,
-              attributes: ['first_name', 'last_name'], 
-            },
+              {
+                  model: User,
+                  include: [
+                      {
+                          model: Profile,
+                          attributes: ['first_name', 'last_name', 'profile_picture'],
+                      },
+                  ],
+              },
           ],
-        },
-      ],
-    });
+          order: [
+              ['total_score', 'DESC']
+          ],
+          limit: 3 
+      });
 
-    return results;
+      return results;
   } catch (error) {
-    console.error(error);
-    throw new Error('Error al obtener los resultados de evaluación por evaluationId');
+      console.error(error);
+      throw new Error('Error al obtener los resultados de evaluación por evaluationId');
   }
 };
-
 exports.getResultsByUserIdAndEvaluationId = async (userId, evaluationId) => {
   try {
     return await EvaluationResult.findAll({
