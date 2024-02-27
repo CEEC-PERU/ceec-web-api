@@ -34,9 +34,9 @@ exports.getCourseById = async (req, res) => {
 };
 
 exports.createCourse = async (req, res) => {
-  const { name, description, image } = req.body;
+  const { name, description, image, background_color, limit_date, logo } = req.body;
   try {
-    const newCourse = await courseService.createCourse({ name, description,  image });
+    const newCourse = await courseService.createCourse({ name, description, image, background_color, limit_date, logo });
     res.status(201).json({
       message: "Curso creado exitosamente",
       newCourse
@@ -48,9 +48,9 @@ exports.createCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
   const courseId = req.params.id;
-  const { name, description, state, duration, is_active , image} = req.body;
+  const { name, description, state, duration, is_active, image } = req.body;
   try {
-    const updatedCourse = await courseService.updateCourse(courseId, { name, description, state, duration, is_active , image});
+    const updatedCourse = await courseService.updateCourse(courseId, { name, description, state, duration, is_active, image });
     if (updatedCourse) {
       res.json(updatedCourse);
     } else {

@@ -73,6 +73,7 @@ exports.deletePreQuizz = async (req, res) => {
 
 exports.getPreQuizzesByCourseId = async (req, res) => {
   const courseId = req.params.course_id;
+  console.log(courseId);
   try {
     const preQuizzes = await preQuizzService.getPreQuizzesByCourseId(courseId);
     res.json(preQuizzes);
