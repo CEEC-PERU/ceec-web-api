@@ -1,4 +1,5 @@
 // userService.js
+const Role = require('../../models/roleModel');
 const Course = require('../../models/courseModel');
 const CourseStudent = require('../../models/courseStudent');
 const User = require('../../models/userModel');
@@ -68,7 +69,18 @@ async function deleteUser(userId) {
 }
 
 async function getAllUsers() {
-  return User.findAll();
+  return User.findAll({
+    include: [{
+      model: Profile,
+      attributes: ['first_name', 'last_name', 'phone', 'profile_picture'],
+    },
+    {
+      model: Role,
+      attributes: ['description'],
+    }],
+    attributes: ['email', 'role_id', 'user_id'],
+
+  });
 }
 
 async function getStudentsQuantity() {

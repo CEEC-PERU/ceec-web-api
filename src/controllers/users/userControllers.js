@@ -61,8 +61,7 @@ async function deleteUser(req, res) {
 async function getAllUsers(req, res) {
   try {
     const users = await userService.getAllUsers();
-    const students = users.filter(user => user.role_id === 1);
-    res.json(students);
+    res.json(users);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error al obtener los usuarios' });

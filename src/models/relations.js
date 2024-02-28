@@ -10,7 +10,8 @@ const Profile = require('./profileModel');
 const DocumentType = require('./documentTypeModel');
 const DictionaryQuiz = require('./dictionaryQuizModel');
 const Option = require('./optionModel')
-const EvaluationResult = require('./evaluationResultModel')
+const EvaluationResult = require('./evaluationResultModel');
+const Role = require('./roleModel');
 
 //un usuario tiene un perfil
 User.hasOne(Profile, {
@@ -145,6 +146,14 @@ Course.belongsToMany(User, {
     through: CourseStudent,
     foreignKey: 'course_id',
 });
+
+User.belongsTo(Role, {
+    foreignKey: 'role_id',
+});
+
+Role.hasOne(User, {
+    foreignKey: 'role_id',
+})
 
 CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
 CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
