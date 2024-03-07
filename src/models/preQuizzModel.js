@@ -34,4 +34,6 @@ const PreQuizz = sequelize.define('PreQuizz', {
   timestamps: false,
 });
 
+
+
 module.exports = PreQuizz;

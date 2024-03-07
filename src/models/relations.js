@@ -2,6 +2,7 @@ const Evaluation = require('./evaluationModel')
 const Quizz = require('./quizzModel')
 const QuizzType = require('./quizzTypeModel')
 const Course = require('./courseModel');
+
 const Module = require('./moduleModel');
 const CourseStudent = require('./courseStudent');
 const User = require('./userModel');
@@ -12,7 +13,7 @@ const DictionaryQuiz = require('./dictionaryQuizModel');
 const Option = require('./optionModel')
 const EvaluationResult = require('./evaluationResultModel');
 const Role = require('./roleModel');
-
+const PrequizzResult = require('./preQuizzResultModel');
 //un usuario tiene un perfil
 User.hasOne(Profile, {
     foreignKey: 'user_id',
@@ -132,6 +133,23 @@ User.hasMany(EvaluationResult, {
 });
 
 Evaluation.hasMany(EvaluationResult, {
+    foreignKey: 'evaluation_id',
+});
+
+Course.hasOne(PrequizzResult, {
+    foreignKey: 'course_id',
+})
+
+PrequizzResult.hasOne(Course, {
+    foreignKey: 'course_id',
+})
+
+
+User.hasMany(PrequizzResult,{
+    foreignKey: 'evaluation_id',
+});
+
+PrequizzResult.hasOne(User,{
     foreignKey: 'evaluation_id',
 });
 

@@ -33,9 +33,9 @@ app.use('/api/quizzes', require('./src/routes/courses/quizzRoutes'));
 app.use('/api/custom', require('./src/routes/courses/customAdminRoutes'));
 app.use('/api/appsession', require('./src/routes/users/appSessionRoutes'))
 app.use('/api/dictionaryquizz', require('./src/routes/courses/dictionaryQuizzRoutes'));
-
+app.use('/api/prequizzresults', require ('./src/routes/courses/prequizzResultRoutes'))
 app.use('/api/evaluation', require('./src/routes/courses/customEvaluationRoutes'));
-
+app.use('/api/prequizzresult', require('./src/routes/courses/customPrequizzRoutes'));
 app.use('/api/image-service', require('./src/routes/courses/imageRoutes'))
 
 app.use('/api/users', require('./src/routes/users/userRoutes'))
@@ -48,6 +48,7 @@ app.use('/api/evaluationresults', require('./src/routes/courses/evaluationResult
 app.use('/api/prequizz', require('./src/routes/courses/prequizzRoutes'));
 app.use('/api/dictionary', require('./src/routes/courses/dictionaryRoutes'));
 app.use('/api/auth', require('./src/routes/auth/auth-route'));
+
 SocketService(server);
 
 

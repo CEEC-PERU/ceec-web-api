@@ -2,17 +2,18 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 const PreQuizz = require('./preQuizzModel')
 const User = require('./userModel')
+const Curso = require('./courseModel')
 const preQuizzResultModel = sequelize.define('preQuizzResultModel', {
     pre_result_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    prequizz_id: {
+    course_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: PreQuizz,
-            key: 'prequizz_id'
+            model: Curso,
+            key: 'course_id'
           } 
     },
     user_id: {
@@ -27,7 +28,8 @@ const preQuizzResultModel = sequelize.define('preQuizzResultModel', {
     },
     efectividad : {
         type: DataTypes.DECIMAL,
-    }
+    },
+   
 }, {
     tableName: 'prequizzresults',
     timestamps: false,

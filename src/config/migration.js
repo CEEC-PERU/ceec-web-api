@@ -13,12 +13,14 @@ const DictionaryQuiz = require('../models/dictionaryModel');
 const FlashCard  = require('../models/flashCardModel');
 const Option  = require('../models/optionModel');
 const Role  = require('../models/roleModel');
+const  preQuizzResultModel  = require('../models/preQuizzResultModel');
 
 // Sincronizar con la base de datos 
 async function authenticateDatabase() {
     try {
       await sequelize.authenticate();
       await sequelize.sync();
+      
       //await sequelize.sync({ force: true }); //Esto creará las tablas; "force: true" elimina las tablas existentes
       console.log('Conexión a la base de datos establecida con éxito');
     } catch (error) {
