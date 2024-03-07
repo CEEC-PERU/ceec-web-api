@@ -8,7 +8,6 @@ exports.getEvaluationDataByCourse = async (course_id) => {
             include: {
                 model: PrequizzResult,
               
-                
             }
         })
         return evaluation
@@ -18,4 +17,17 @@ exports.getEvaluationDataByCourse = async (course_id) => {
     }
 }
 
+exports.getEvaluationDataByUserandCourse = async (userId , courseId) => {
+    try {
+        return await PrequizzResult.findAll({
+            where: {
+              user_id: userId,
+              course_id: courseId,
+            },
+          });
+    } catch (error) {
+        console.error(error);
+    throw new Error('Error al obtener los resultados de evaluación por user_id y evaluation_id');
+  }
+};
 

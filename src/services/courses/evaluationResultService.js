@@ -90,6 +90,7 @@ exports.getResultsByEvaluationId = async (evaluationId) => {
       throw new Error('Error al obtener los resultados de evaluación por evaluationId');
   }
 };
+
 exports.getResultsByUserIdAndEvaluationId = async (userId, evaluationId) => {
   try {
     return await EvaluationResult.findAll({

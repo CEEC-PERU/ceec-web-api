@@ -20,7 +20,12 @@ async function authenticateDatabase() {
     try {
       await sequelize.authenticate();
       await sequelize.sync();
-      
+      preQuizzResultModel.sync({ force: true }).then(() => {
+        console.log('Tabla prequizzresults eliminada exitosamente');
+    }).catch(err => {
+        console.error('Error al eliminar la tabla prequizzresults:', err);
+    });
+    
       //await sequelize.sync({ force: true }); //Esto creará las tablas; "force: true" elimina las tablas existentes
       console.log('Conexión a la base de datos establecida con éxito');
     } catch (error) {
