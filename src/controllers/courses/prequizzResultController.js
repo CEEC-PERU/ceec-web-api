@@ -1,4 +1,4 @@
-const preQuizzResultModel = require('../../models/preQuizzResultModel');
+
 const PrequizzResultService = require('../../services/courses/prequizzResultService');
 
 exports.getAllPrequizzResults = async (req, res) => {
@@ -9,13 +9,15 @@ exports.getAllPrequizzResults = async (req, res) => {
       res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
 exports.createPrequizzResult = async (req, res) => {
   const prequizzResultData = req.body;
   try {
     const newResult = await PrequizzResultService.createPrequizzResult(prequizzResultData);
     res.json(newResult);
   } catch (error) {
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error(error); // Mostrar el error en la consola para debugging
+    res.status(500).json({ error: 'Error interno del servidor', message: error.message });
   }
 };
 

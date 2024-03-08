@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
-const PreQuizz = require('./preQuizzModel')
 const User = require('./userModel')
 const Curso = require('./courseModel')
 const preQuizzResultModel = sequelize.define('preQuizzResultModel', {

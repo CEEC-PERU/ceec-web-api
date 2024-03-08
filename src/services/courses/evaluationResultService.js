@@ -24,6 +24,7 @@ exports.getEvaluationResultById = async (resultId) => {
   }
 };
 
+
 exports.createEvaluationResult = async (evaluationResultData) => {
   try {
     return await EvaluationResult.create(evaluationResultData);
