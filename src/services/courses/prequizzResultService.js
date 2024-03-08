@@ -35,9 +35,32 @@ exports.getPrequizzResultById = async (resultId) => {
 
   exports.saveResultEvaluation = async (evaluationResult) => {
     try {
-      const result = await EvaluationResult.create(evaluationResult);
+      const result = await PreqquizzResult.create(evaluationResult);
       return result
     } catch (error) {
       console.error(error);
     }
   }
+
+  exports.deletePrequizzResultById = async (resultId) => {
+    try {
+        const result = await PreqquizzResult.findByPk(resultId);
+        if (result) {
+            await result.destroy();
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error al eliminar el resultado de evaluación');
+    }
+};
+
+exports.getAllPrequizzResults = async () => {
+  try {
+      return await PreqquizzResult.findAll();
+  } catch (error) {
+      console.error(error);
+      throw new Error('Error al obtener todos los resultados de prequizz');
+  }
+};

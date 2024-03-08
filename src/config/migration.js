@@ -14,18 +14,11 @@ const FlashCard  = require('../models/flashCardModel');
 const Option  = require('../models/optionModel');
 const Role  = require('../models/roleModel');
 const  preQuizzResultModel  = require('../models/preQuizzResultModel');
-
 // Sincronizar con la base de datos 
 async function authenticateDatabase() {
     try {
       await sequelize.authenticate();
       await sequelize.sync();
-      preQuizzResultModel.sync({ force: true }).then(() => {
-        console.log('Tabla prequizzresults eliminada exitosamente');
-    }).catch(err => {
-        console.error('Error al eliminar la tabla prequizzresults:', err);
-    });
-    
       //await sequelize.sync({ force: true }); //Esto creará las tablas; "force: true" elimina las tablas existentes
       console.log('Conexión a la base de datos establecida con éxito');
     } catch (error) {
@@ -34,5 +27,4 @@ async function authenticateDatabase() {
   }
   module.exports = {
     authenticateDatabase,
-  
   };

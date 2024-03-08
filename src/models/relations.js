@@ -136,21 +136,22 @@ Evaluation.hasMany(EvaluationResult, {
     foreignKey: 'evaluation_id',
 });
 
-Course.hasOne(PrequizzResult, {
+//Un curso puede tener varios prequizzresult_id
+Course.hasMany(PrequizzResult, {
     foreignKey: 'course_id',
 })
 
-PrequizzResult.hasOne(Course, {
+// prequizzresult_id puede pertenecer a un curso
+PrequizzResult.belongsTo(Course, {
     foreignKey: 'course_id',
 })
-
-
+// un usuario puede pertenecer a varios prequizzresult_id
 User.hasMany(PrequizzResult,{
-    foreignKey: 'evaluation_id',
+    foreignKey: 'user_id',
 });
-
-PrequizzResult.hasOne(User,{
-    foreignKey: 'evaluation_id',
+// un prequizzresult_id solo puede tener un usuario  
+PrequizzResult.belongsTo(User,{
+    foreignKey: 'user_id',
 });
 
 // En el modelo User

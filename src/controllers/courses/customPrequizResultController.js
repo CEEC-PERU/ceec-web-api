@@ -12,11 +12,10 @@ exports.getEvaluationByCourse = async (req, res) => {
 }
 
 exports.getEvaluationByUserandCourse = async (req, res) => {
-     const user_id = req.params.iduser;
-        const course_id = req.params.idcourse;
+    const userId = req.params.userId;
+    const courseId = req.params.courseId;
     try {
-       
-        const evaluation = await customPrequizzService.getEvaluationDataByUserandCourse(user_id ,course_id)
+        const evaluation = await customPrequizzService.getEvaluationDataByUserandCourse(userId ,courseId)
         res.json(evaluation)
     } catch (error) {
         console.log(error)

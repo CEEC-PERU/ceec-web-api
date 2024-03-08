@@ -37,7 +37,6 @@ app.use('/api/prequizzresults', require ('./src/routes/courses/prequizzResultRou
 app.use('/api/evaluation', require('./src/routes/courses/customEvaluationRoutes'));
 app.use('/api/prequizzresult', require('./src/routes/courses/customPrequizzRoutes'));
 app.use('/api/image-service', require('./src/routes/courses/imageRoutes'))
-
 app.use('/api/users', require('./src/routes/users/userRoutes'))
 app.use('/api/profiles', require('./src/routes/users/profileRoutes'))
 app.use('/api/quizztypes', require('./src/routes/courses/quizzTypeRoutes'));

@@ -9,7 +9,6 @@ exports.getAllPreQuizzes = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
 exports.getPreQuizzById = async (req, res) => {
   const preQuizzId = req.params.id;
   try {
@@ -38,7 +37,6 @@ exports.createPreQuizz = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
 
 exports.updatePreQuizz = async (req, res) => {
   const preQuizzId = req.params.id;
@@ -82,3 +80,4 @@ exports.getPreQuizzesByCourseId = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
