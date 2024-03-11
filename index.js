@@ -48,7 +48,6 @@ app.use('/api/campaigncourses', require('./src/routes/campaign/campaignCourseRou
 app.use('/api/customcampaign', require('./src/routes/campaign/customCampaignRoutes'));
 app.use('/api/prequizz', require('./src/routes/courses/prequizzRoutes'));
 app.use('/api/dictionary', require('./src/routes/courses/dictionaryRoutes'));
-
 app.use('/api/auth', require('./src/routes/auth/auth-route'));
 SocketService(server);
 
