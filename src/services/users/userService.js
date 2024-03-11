@@ -127,6 +127,22 @@ async function findUsersNotEnrolledInCourse(course_id) {
   }
 }
 
+async function getAllStudents() {
+  return User.findAll({
+    where: {
+      role_id: 1
+    },
+    include: [{
+      model: Profile,
+      attributes: ['first_name', 'last_name', 'phone', 'profile_picture'],
+    },
+    {
+      model: Role,
+      attributes: ['description'],
+    }],
+    attributes: ['email', 'role_id', 'user_id'],
+  });
+}
 
 module.exports = {
   createUser,
@@ -136,5 +152,6 @@ module.exports = {
   getAllUsers,
   getAllCourseStudentsWithDetails,
   getStudentsQuantity,
-  findUsersNotEnrolledInCourse
+  findUsersNotEnrolledInCourse,
+  getAllStudents
 };
