@@ -43,14 +43,14 @@ app.use('/api/quizztypes', require('./src/routes/courses/quizzTypeRoutes'));
 app.use('/api/flashcard', require('./src/routes/courses/flashCardRoutes'));
 app.use('/api/coursestudent', require('./src/routes/courses/courseStudentRoutes'));
 app.use('/api/evaluationresults', require('./src/routes/courses/evaluationResultRoutes'));
-
+app.use('/api/campaigns', require('./src/routes/campaign/campaignRoutes'));
+app.use('/api/campaigncourses', require('./src/routes/campaign/campaignCourseRoutes'));
+app.use('/api/customcampaign', require('./src/routes/campaign/customCampaignRoutes'));
 app.use('/api/prequizz', require('./src/routes/courses/prequizzRoutes'));
 app.use('/api/dictionary', require('./src/routes/courses/dictionaryRoutes'));
+
 app.use('/api/auth', require('./src/routes/auth/auth-route'));
-
 SocketService(server);
-
-
 
 server.listen(PORT, () => {
   console.log(`Server is running 🚀🚀🚀`);

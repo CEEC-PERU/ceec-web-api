@@ -14,6 +14,8 @@ const Option = require('./optionModel')
 const EvaluationResult = require('./evaluationResultModel');
 const Role = require('./roleModel');
 const PrequizzResult = require('./preQuizzResultModel');
+const Campaign = require('./campaignModel');
+const CampaignCourse = require('./campaignCourse');
 //un usuario tiene un perfil
 User.hasOne(Profile, {
     foreignKey: 'user_id',
@@ -92,7 +94,6 @@ Evaluation.belongsTo(Module, {
     foreignKey: 'module_id'
 })
 
-
 //un usuario tiene varias sesiones
 User.hasMany(AppSession, {
     foreignKey: 'user_id',
@@ -153,27 +154,41 @@ User.hasMany(PrequizzResult,{
 PrequizzResult.belongsTo(User,{
     foreignKey: 'user_id',
 });
-
 // En el modelo User
 User.belongsToMany(Course, {
     through: CourseStudent,
     foreignKey: 'user_id',
 });
-
 // En el modelo Course
 Course.belongsToMany(User, {
     through: CourseStudent,
     foreignKey: 'course_id',
 });
-
 User.belongsTo(Role, {
     foreignKey: 'role_id',
 });
-
 Role.hasOne(User, {
     foreignKey: 'role_id',
 })
+// Una campaña puede tener varios cursos
+Campaign.belongsToMany(Course, {
+    through: CampaignCourse,
+    foreignKey: 'campaign_id',
+});
+// Un curso puede pertenecer a varias campañas
+Course.belongsToMany(Campaign, {
+    through: CampaignCourse,
+    foreignKey: 'course_id',
+});
+// CampaignCourse está asociado con Campaign
+CampaignCourse.belongsTo(Campaign, {
+    foreignKey: 'campaign_id',
+});
 
+// CampaignCourse está asociado con Course
+CampaignCourse.belongsTo(Course, {
+    foreignKey: 'course_id',
+});
 CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
 CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
 User.hasMany(CourseStudent, { foreignKey: 'user_id' });

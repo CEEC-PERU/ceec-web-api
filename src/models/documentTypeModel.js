@@ -16,5 +16,4 @@ const DocumentType = sequelize.define('DocumentType', {
   timestamps: false,
 });
 
-
 module.exports = DocumentType;
