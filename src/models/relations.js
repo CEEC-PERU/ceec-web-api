@@ -105,7 +105,6 @@ AppSession.belongsTo(User, {
     as: 'usersession',
 });
 
-
 //un usuario tiene varios cursos
 // User.belongsToMany(Course, {
 //     through: { model: CourseStudent, unique: false },
@@ -193,3 +192,8 @@ CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
 CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
 User.hasMany(CourseStudent, { foreignKey: 'user_id' });
 Course.hasMany(CourseStudent, { foreignKey: 'course_id' });
+// En tu archivo CourseStudent.js
+CourseStudent.hasMany(PrequizzResult, { foreignKey: 'course_id' });
+
+// En tu archivo preQuizzResultModel.js
+PrequizzResult.belongsTo(Course, { foreignKey: 'course_id' });

@@ -7,4 +7,6 @@ const customPrequizzController = require('../../controllers/courses/customPrequi
 router.get('/:id', authenticateToken, customPrequizzController.getEvaluationByCourse);
 router.get('/usercourse/:userId/:courseId', authenticateToken, customPrequizzController.getEvaluationByUserandCourse);
 
-module.exports = router
+router.get('/notasprequizz/:userId', authenticateToken,  customPrequizzController.getCoursesWithPrequizzResultsByUserController);
+
+module.exports = router;

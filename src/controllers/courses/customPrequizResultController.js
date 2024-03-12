@@ -22,3 +22,14 @@ exports.getEvaluationByUserandCourse = async (req, res) => {
         throw error
     }
 }
+
+exports.getCoursesWithPrequizzResultsByUserController = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const coursesWithPrequizzResults = await customPrequizzService.getCourseStudentsWithPrequizzResultsByUser(userId);
+        res.status(200).json(coursesWithPrequizzResults);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los cursos y los resultados de Prequizz por user_id' });
+    }
+}; 
