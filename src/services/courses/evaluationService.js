@@ -62,3 +62,23 @@ exports.saveResultEvaluation = async (evaluationResult) => {
     console.error(error);
   }
 }
+
+exports.getEvaluationsByUserId = async (userId) => {
+  try {
+    return await EvaluationResult.findAll({
+      where: {
+        user_id: userId
+      },
+      include: [
+        {
+          model: Evaluation,
+          attributes: ['evaluation_id', 'quizz_type', 'name', 'module_id', 'is_complete'],
+        },
+      ],
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error al obtener las evaluaciones por user_id');
+  }
+};
+

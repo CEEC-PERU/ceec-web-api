@@ -1,7 +1,7 @@
 const customEvaluationService = require("../../services/courses/customEvaluationService")
 const { createEvaluation } = require("../../services/courses/evaluationService")
 const { createQuizz } = require("../../services/courses/quizzService")
-
+const { getAssignedCoursesWithAverageEvaluation } = require('../../services/courses/customEvaluationService');
 exports.getEvaluationByModule = async (req, res) => {
     try {
         const module_id = req.params.id
@@ -38,3 +38,17 @@ exports.postEvaluationWithQuestions = async (req, res) => {
         return res.json({ error: "Internal server error" });
     }
 }
+
+
+
+
+exports.getAssignedCoursesWithAverageEvaluationController = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const assignedCoursesWithAverageEvaluation = await customEvaluationService.getAssignedCoursesWithEvaluations(userId);
+    res.json(assignedCoursesWithAverageEvaluation);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener los cursos asignados y el promedio de las evaluaciones');
+  }
+};

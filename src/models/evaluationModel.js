@@ -26,7 +26,8 @@ const Evaluation = sequelize.define('Evaluation', {
   is_complete:{
     type: DataTypes.BOOLEAN,
     defaultValue: false,
-  }
+  },
+  
 }, {
   tableName: 'evaluations',
   timestamps: false, 
