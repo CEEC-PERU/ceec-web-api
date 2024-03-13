@@ -188,6 +188,8 @@ CampaignCourse.belongsTo(Campaign, {
 CampaignCourse.belongsTo(Course, {
     foreignKey: 'course_id',
 });
+
+
 CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
 CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
 User.hasMany(CourseStudent, { foreignKey: 'user_id' });
@@ -197,3 +199,28 @@ CourseStudent.hasMany(PrequizzResult, { foreignKey: 'course_id' });
 
 // En tu archivo preQuizzResultModel.js
 PrequizzResult.belongsTo(Course, { foreignKey: 'course_id' });
+
+// En el modelo CourseStudent.js
+CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
+CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
+
+// En el modelo Course.js
+Course.hasMany(CourseStudent, { foreignKey: 'course_id' });
+
+// En el modelo User.js
+User.hasMany(CourseStudent, { foreignKey: 'user_id' });
+
+// En el modelo PrequizzResult.js
+PrequizzResult.belongsTo(Course, { foreignKey: 'course_id' });
+
+// En el modelo CampaignCourse.js
+CampaignCourse.belongsTo(Campaign, { foreignKey: 'campaign_id' });
+CampaignCourse.belongsTo(Course, { foreignKey: 'course_id' });
+
+// En el modelo Campaign.js
+Campaign.belongsToMany(Course, { through: CampaignCourse, foreignKey: 'campaign_id' });
+
+// En el modelo Course.js
+Course.belongsToMany(Campaign, { through: CampaignCourse, foreignKey: 'course_id' });
+// En el modelo Course.js
+Course.hasMany(CampaignCourse, { foreignKey: 'course_id' });

@@ -23,13 +23,13 @@ exports.getEvaluationByUserandCourse = async (req, res) => {
     }
 }
 
-exports.getCoursesWithPrequizzResultsByUserController = async (req, res) => {
+exports.getCourseStudentsWithPrequizzResultsByUserAndCampaign = async (req, res) => {
+    const { userId, campaignId } = req.params;
     try {
-        const userId = req.params.userId;
-        const coursesWithPrequizzResults = await customPrequizzService.getCourseStudentsWithPrequizzResultsByUser(userId);
-        res.status(200).json(coursesWithPrequizzResults);
+        const courseStudents = await customPrequizzService.getCourseStudentsWithPrequizzResultsByUser(userId, campaignId);
+        return res.status(200).json({ success: true, data: courseStudents });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los cursos y los resultados de Prequizz por user_id' });
+        return res.status(500).json({ success: false, error: 'Error al obtener los estudiantes de curso con resultados de prequizz por user_id y campaign_id' });
     }
-}; 
+};
