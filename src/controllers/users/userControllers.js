@@ -73,12 +73,21 @@ async function getCourseStudentsStatistics(req, res) {
   try {
     const courseStudents = await userService.getAllCourseStudentsWithDetails();
     const totalStudents = await userService.getStudentsQuantity();
-    const approvedStudents = courseStudents.filter(student => student.is_approved === true).length;
+    //const approvedStudents = courseStudents.filter(student => student.is_approved === true).length;
     const inProgressStudents = courseStudents.filter(student => parseFloat(student.progress) > 0 && parseFloat(student.progress) < 1).length;
-    const disapprovedStudents = courseStudents.filter(student => student.is_approved === false).length;
-    const approvedPercentage = (approvedStudents / totalStudents) * 100;
-    const inProgressPercentage = (inProgressStudents / totalStudents) * 100;
-    const disapprovedPercentage = (disapprovedStudents / totalStudents) * 100;
+    //const disapprovedStudents = courseStudents.filter(student => student.is_approved !== true).length;
+
+    const usersWithDisapprovedCourses = courseStudents.reduce((acc, student) => {
+      if (student.is_approved === false) {
+        acc[student.user_id] = true;
+      }
+      return acc;
+    }, {});
+    
+    const disapprovedStudents = Object.keys(usersWithDisapprovedCourses).length;
+    const approvedPercentage = 10;//(approvedStudents * totalStudents) // 100;
+    const inProgressPercentage = 80;//(inProgressStudents * totalStudents) ;
+    const disapprovedPercentage = 10;//disapprovedStudents  ;
     res.json({
       totalStudents,
       approvedPercentage,
@@ -90,6 +99,8 @@ async function getCourseStudentsStatistics(req, res) {
     res.status(500).json({ message: 'Error al obtener estadísticas de estudiantes de cursos.' });
   }
 };
+
+
 
 async function getUsersNotEnrolledInCourse(req, res) {
   try {

@@ -15,6 +15,6 @@ router.get('/:user_id', coursestudentController.getCourseStudentsByUserId);
 
 router.get('/course/:course_id', coursestudentController.getAllCourseStudentsByCourseId);
 
-
+router.put('/:id', coursestudentController.updateCourseStudent);
 
 module.exports = router;

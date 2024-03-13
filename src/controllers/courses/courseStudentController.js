@@ -95,3 +95,22 @@ exports.postCourseStudents = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 }
+
+
+
+exports.updateCourseStudent = async (req, res) => {
+  const { id } = req.params;
+  const courseStudentData = req.body;
+
+  try {
+    const updatedCourseStudent = await courseStudentService.updateCourseStudentById(id, courseStudentData);
+    if (updatedCourseStudent[0] === 0) {
+      res.status(404).json({ error: 'No CourseStudent found with this id' });
+    } else {
+      res.json(updatedCourseStudent);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update course student' });
+  }
+};

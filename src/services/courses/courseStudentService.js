@@ -94,3 +94,19 @@ exports.saveCourseStudent = async (course_student) => {
     throw error;
   }
 }
+
+
+exports.updateCourseStudentById = async (id, courseStudentData) => {
+  try {
+    const courseStudent = await CourseStudent.update(courseStudentData, {
+      where: { id: id }
+    });
+    if (courseStudent[0] === 0) {
+      throw new Error('No CourseStudent found with this id');
+    }
+    return courseStudent;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
