@@ -2,68 +2,162 @@ const Evaluation = require('./evaluationModel')
 const Quizz = require('./quizzModel')
 const QuizzType = require('./quizzTypeModel')
 const Course = require('./courseModel');
-
 const Module = require('./moduleModel');
-const CourseStudent = require('./courseStudent');
+
 const User = require('./userModel');
 const AppSession = require('./appSessionModel');
 const Profile = require('./profileModel');
 const DocumentType = require('./documentTypeModel');
-const DictionaryQuiz = require('./dictionaryQuizModel');
-const Option = require('./optionModel')
 const EvaluationResult = require('./evaluationResultModel');
 const Role = require('./roleModel');
 const PrequizzResult = require('./preQuizzResultModel');
 const Campaign = require('./campaignModel');
 const CampaignCourse = require('./campaignCourse');
+const State = require('./StateModel');
+const DictionaryQuiz = require('./dictionaryModel');
+const CampaignUser = require('./campaignUser');
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Si un CampaignUser puede tener varios CampaignCourse
+CampaignUser.hasMany(CampaignCourse, {
+    foreignKey: 'campaign_id',
+});
+
+///////////////////////////////////////////////////////////////////////////////
+
+State.hasMany(CampaignUser, {
+    foreignKey: 'id_state',
+});
+
+
+/////////////////////////////////////////////////////////////////////////////
 //un usuario tiene un perfil
 User.hasOne(Profile, {
     foreignKey: 'user_id',
 });
 
+// Un usuario puede tener varias sesiones de aplicación
+User.hasMany(AppSession, {
+    foreignKey: 'user_id',
+    as: 'appsessions',
+});
+
+// Un usuario puede tener muchos resultados de evaluación
+User.hasMany(EvaluationResult, {
+    foreignKey: 'user_id',
+});
+
+
+// Un usuario puede tener varios resultados de prequizz
+User.hasMany(PrequizzResult,{
+    foreignKey: 'user_id',
+});
+
+
+
+
+// Un usuario pertenece a un rol
+User.belongsTo(Role, {
+    foreignKey: 'role_id',
+});
+
+
+//////////////////////////////////////////////////////////////////
+
 Profile.belongsTo(User, {
     foreignKey: 'user_id',
 });
+
+Profile.belongsTo(DocumentType, {
+    foreignKey: 'document_id'
+});
+
+///////////////////////////////////////////////////////
+
+
+// Una evaluación puede tener muchas preguntas
+Evaluation.hasMany(Quizz, {
+    foreignKey: 'evaluation_id',
+})
+// Una evaluación pertenece a un módulo
+Evaluation.belongsTo(Module, {
+    foreignKey: 'module_id'
+})
+
+// Una evaluación puede tener muchos resultados de evaluación
+Evaluation.hasMany(EvaluationResult, {
+    foreignKey: 'evaluation_id',
+});
+
+/////////////////////////////////////////////////////////////////////////
+
+//Un resultado de evaluación pertenece a un usuario
+EvaluationResult.belongsTo(User,{
+    foreignKey: 'user_id',
+});
+
+//Un resultado de evaluación pertenece a una evaluación
+EvaluationResult.belongsTo(Evaluation,{
+    foreignKey: 'evaluation_id',
+});
+
+/////////////////////////////////////////////////////////////////////////
+
+// Un módulo pertenece a un curso
+Module.belongsTo(Course, {
+    foreignKey: 'course_id',
+    as: 'course',
+});
+
+
+// Un módulo tiene una evaluación
+Module.hasOne(Evaluation, {
+    foreignKey: 'module_id',
+})
+
+/////////////////////////////////////////////////////////////////////////
+
+
+// Un resultado de prequizz puede pertenecer a un curso
+PrequizzResult.belongsTo(Course, {
+    foreignKey: 'course_id',
+})
+
+// Un resultado de prequizz puede pertenecer a un usuario
+PrequizzResult.belongsTo(User,{
+    foreignKey: 'user_id',
+});
+
+
+/////////////////////////////////////////////////////////////////////////
+
 
 //un perfil tiene un tipo de documento
 DocumentType.hasOne(Profile, {
     foreignKey: 'document_id'
 })
 
-Profile.belongsTo(DocumentType, {
-    foreignKey: 'document_id'
-});
+///////////////////////////////////////////////////////////////////////
 
-//una evaluacion tiene varias preguntas 
-Evaluation.hasMany(Quizz, {
-    foreignKey: 'evaluation_id',
-})
-
-
+// Un cuestionario pertenece a una evaluación
 Quizz.belongsTo(Evaluation, {
     foreignKey: 'evaluation_id',
 });
 
-//un tipo de quizz tiene varias preguntas
-QuizzType.hasMany(Quizz, {
-    foreignKey: 'quizz_type',
-    as: 'questions',
-});
-
-
+// Un cuestionario pertenece a un tipo de cuestionario
 Quizz.belongsTo(QuizzType, {
     foreignKey: 'quizz_type',
     as: 'quizzType',
 });
 
-//una pregunta tiene varias opciones
-Quizz.hasMany(Option, {
-    foreignKey: 'quizz_id',
-})
 
-Option.belongsTo(Quizz, {
-    foreignKey: 'quizz_id',
-})
+
+///////////////////////////////////////////////////////////////////////
 
 //un curso tiene varios modulos
 Course.hasMany(Module, {
@@ -71,39 +165,94 @@ Course.hasMany(Module, {
     as: 'modules',
 });
 
-Module.belongsTo(Course, {
+// Un curso puede tener varios resultados de prequizz
+Course.hasMany(PrequizzResult, {
     foreignKey: 'course_id',
-    as: 'course',
-});
-
-//un modulo tiene un diccionario
-Module.hasMany(DictionaryQuiz, {
-    foreignKey: 'module_id',
 })
 
+
+
+
+
+
+// Un curso puede pertenecer a varias campañas
+Course.belongsToMany(Campaign, { through: CampaignCourse, foreignKey: 'campaign_id' });
+
+
+// Un curso puede tener muchas relaciones de curso de campaña
+Course.hasMany(CampaignCourse, { foreignKey: 'course_id' });
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+
+// Un curso de campaña pertenece a una campaña
+CampaignCourse.belongsTo(Campaign, { foreignKey: 'campaign_id' });
+
+// Un curso de campaña pertenece a un curso
+CampaignCourse.belongsTo(Course, { foreignKey: 'course_id' });
+
+
+// Un curso de campaña está asociado con una campaña
+CampaignCourse.belongsTo(Campaign, {
+    foreignKey: 'campaign_id',
+});
+
+// Un curso de campaña está asociado con un curso
+CampaignCourse.belongsTo(Course, {
+    foreignKey: 'course_id',
+});
+
+
+///////////////////////////////////////////////////////////////////////
+
+
+// Un tipo de cuestionario puede tener varias preguntas
+QuizzType.hasMany(Quizz, {
+    foreignKey: 'quizz_type',
+    as: 'questions',
+});
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+// Un cuestionario de diccionario pertenece a un módulo
 DictionaryQuiz.belongsTo(Module, {
     foreignKey: 'dictionary_id',
 });
 
-//un modulo tiene una evaluación
-Module.hasOne(Evaluation, {
-    foreignKey: 'module_id',
-})
+////////////////////////////////////////////////////////////////////////////////////////////
 
-Evaluation.belongsTo(Module, {
-    foreignKey: 'module_id'
-})
-
-//un usuario tiene varias sesiones
-User.hasMany(AppSession, {
-    foreignKey: 'user_id',
-    as: 'appsessions',
-});
-
+// Una sesión de aplicación pertenece a un usuario
 AppSession.belongsTo(User, {
     foreignKey: 'user_id',
     as: 'usersession',
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Una campaña puede estar asociada con muchos cursos
+Campaign.belongsToMany(Course, {
+    through: CampaignCourse,
+    foreignKey: 'campaign_id',
+});
+
+
+//////////////////////////////////////////////////////////////////////////
+
+// Un resultado de prequizz pertenece a un curso
+PrequizzResult.belongsTo(Course, { foreignKey: 'course_id' });
+
+
+///////////////////////////////////////////////////////////////////////////
+
+// Un rol tiene un usuario
+Role.hasOne(User, {
+    foreignKey: 'role_id',
+})
+
 
 //un usuario tiene varios cursos
 // User.belongsToMany(Course, {
@@ -118,109 +267,7 @@ AppSession.belongsTo(User, {
 //     otherKey: 'course_id',
 // });
 
-//el resultado de una evaluación tiiene un usuario y una evaluacion
-EvaluationResult.belongsTo(User,{
-    foreignKey: 'user_id',
-});
 
-EvaluationResult.belongsTo(Evaluation,{
-    foreignKey: 'evaluation_id',
-});
+//si no cargar evaluacion , 
 
 
-User.hasMany(EvaluationResult, {
-    foreignKey: 'user_id',
-});
-
-Evaluation.hasMany(EvaluationResult, {
-    foreignKey: 'evaluation_id',
-});
-
-//Un curso puede tener varios prequizzresult_id
-Course.hasMany(PrequizzResult, {
-    foreignKey: 'course_id',
-})
-
-// prequizzresult_id puede pertenecer a un curso
-PrequizzResult.belongsTo(Course, {
-    foreignKey: 'course_id',
-})
-// un usuario puede pertenecer a varios prequizzresult_id
-User.hasMany(PrequizzResult,{
-    foreignKey: 'user_id',
-});
-// un prequizzresult_id solo puede tener un usuario  
-PrequizzResult.belongsTo(User,{
-    foreignKey: 'user_id',
-});
-// En el modelo User
-User.belongsToMany(Course, {
-    through: CourseStudent,
-    foreignKey: 'user_id',
-});
-// En el modelo Course
-Course.belongsToMany(User, {
-    through: CourseStudent,
-    foreignKey: 'course_id',
-});
-User.belongsTo(Role, {
-    foreignKey: 'role_id',
-});
-Role.hasOne(User, {
-    foreignKey: 'role_id',
-})
-// Una campaña puede tener varios cursos
-Campaign.belongsToMany(Course, {
-    through: CampaignCourse,
-    foreignKey: 'campaign_id',
-});
-// Un curso puede pertenecer a varias campañas
-Course.belongsToMany(Campaign, {
-    through: CampaignCourse,
-    foreignKey: 'course_id',
-});
-// CampaignCourse está asociado con Campaign
-CampaignCourse.belongsTo(Campaign, {
-    foreignKey: 'campaign_id',
-});
-
-// CampaignCourse está asociado con Course
-CampaignCourse.belongsTo(Course, {
-    foreignKey: 'course_id',
-});
-
-
-CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
-CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
-User.hasMany(CourseStudent, { foreignKey: 'user_id' });
-Course.hasMany(CourseStudent, { foreignKey: 'course_id' });
-// En tu archivo CourseStudent.js
-CourseStudent.hasMany(PrequizzResult, { foreignKey: 'course_id' });
-
-// En tu archivo preQuizzResultModel.js
-PrequizzResult.belongsTo(Course, { foreignKey: 'course_id' });
-
-// En el modelo CourseStudent.js
-CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
-CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
-
-// En el modelo Course.js
-Course.hasMany(CourseStudent, { foreignKey: 'course_id' });
-
-// En el modelo User.js
-User.hasMany(CourseStudent, { foreignKey: 'user_id' });
-
-// En el modelo PrequizzResult.js
-PrequizzResult.belongsTo(Course, { foreignKey: 'course_id' });
-
-// En el modelo CampaignCourse.js
-CampaignCourse.belongsTo(Campaign, { foreignKey: 'campaign_id' });
-CampaignCourse.belongsTo(Course, { foreignKey: 'course_id' });
-
-// En el modelo Campaign.js
-Campaign.belongsToMany(Course, { through: CampaignCourse, foreignKey: 'campaign_id' });
-
-// En el modelo Course.js
-Course.belongsToMany(Campaign, { through: CampaignCourse, foreignKey: 'course_id' });
-// En el modelo Course.js
-Course.hasMany(CampaignCourse, { foreignKey: 'course_id' });

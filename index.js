@@ -44,6 +44,7 @@ app.use('/api/flashcard', require('./src/routes/courses/flashCardRoutes'));
 app.use('/api/coursestudent', require('./src/routes/courses/courseStudentRoutes'));
 app.use('/api/evaluationresults', require('./src/routes/courses/evaluationResultRoutes'));
 app.use('/api/campaigns', require('./src/routes/campaign/campaignRoutes'));
+app.use('/api/campaignuser', require('./src/routes/campaign/campaignUserRoutes'));
 app.use('/api/campaigncourses', require('./src/routes/campaign/campaignCourseRoutes'));
 app.use('/api/customcampaign', require('./src/routes/campaign/customCampaignRoutes'));
 app.use('/api/prequizz', require('./src/routes/courses/prequizzRoutes'));

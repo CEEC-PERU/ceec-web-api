@@ -1,7 +1,6 @@
 const Evaluation = require("../../models/evaluationModel");
 const Module = require("../../models/moduleModel");
 const Quizz = require("../../models/quizzModel");
-const Option = require("../../models/optionModel")
 const CourseStudent = require('../../models/courseStudent');
 const Course = require('../../models/courseModel');
 const EvaluationResult = require("../../models/evaluationResultModel");
@@ -13,9 +12,7 @@ exports.getEvaluationDataByModule = async (module_id) => {
                 model: Evaluation,
                 include: {
                     model: Quizz,
-                    include: {
-                        model: Option
-                    }
+                   
                 }
             }
         })

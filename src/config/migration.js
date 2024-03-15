@@ -11,7 +11,6 @@ const AppSession = require('../models/appSessionModel');
 const Profile = require('../models/profileModel');
 const DictionaryQuiz = require('../models/dictionaryModel');
 const FlashCard  = require('../models/flashCardModel');
-const Option  = require('../models/optionModel');
 const Role  = require('../models/roleModel');
 const  preQuizzResultModel  = require('../models/preQuizzResultModel');
 // Sincronizar con la base de datos 

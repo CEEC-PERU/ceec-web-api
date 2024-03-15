@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+/*const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database'); 
 const User = require('./userModel');
 const Course = require('./courseModel')
@@ -44,3 +44,5 @@ const CourseStudent = sequelize.define('CourseStudent', {
 });
 
 module.exports = CourseStudent;
+// Llama al método drop en el modelo CourseStudent para eliminar la tabla de la base de datos
+CourseStudent.drop().then(() => console.log('CourseStudent table dropped'));*/

@@ -21,7 +21,7 @@ const DictionaryQuiz = sequelize.define('DictionaryQuiz', {
         type: DataTypes.INTEGER
     }
 }, {
-    tableName: 'dictionaryquizzes',
+    tableName: 'dictionaryquizze',
     timestamps: false,
 });
 
