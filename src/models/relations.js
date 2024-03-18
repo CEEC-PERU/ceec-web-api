@@ -14,24 +14,14 @@ const PrequizzResult = require('./preQuizzResultModel');
 const Campaign = require('./campaignModel');
 const CampaignCourse = require('./campaignCourse');
 const State = require('./StateModel');
-const DictionaryQuiz = require('./dictionaryModel');
-const CampaignUser = require('./campaignUser');
-
-
+const CamapaignUser = require('./campaignUser');
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// Si un CampaignUser puede tener varios CampaignCourse
-CampaignUser.hasMany(CampaignCourse, {
-    foreignKey: 'campaign_id',
+
+State.hasMany(CampaignCourse, {
+    foreignKey: 'user_id',
 });
-
-///////////////////////////////////////////////////////////////////////////////
-
-State.hasMany(CampaignUser, {
-    foreignKey: 'id_state',
-});
-
 
 /////////////////////////////////////////////////////////////////////////////
 //un usuario tiene un perfil
@@ -56,13 +46,24 @@ User.hasMany(PrequizzResult,{
     foreignKey: 'user_id',
 });
 
+///??
+// Un usuario puede estar asociado con muchos cursos
+User.belongsToMany(Course, {
+    through: CourseStudent,
+    foreignKey: 'user_id',
+});
 
 
+// Un usuario puede tener muchas relaciones de estudiante de curso?
+User.hasMany(CourseStudent, { foreignKey: 'user_id' });
 
 // Un usuario pertenece a un rol
 User.belongsTo(Role, {
     foreignKey: 'role_id',
 });
+// En el modelo User.js
+User.hasMany(CourseStudent, { foreignKey: 'user_id' });
+
 
 
 //////////////////////////////////////////////////////////////////
@@ -154,7 +155,6 @@ Quizz.belongsTo(QuizzType, {
 });
 
 
-
 ///////////////////////////////////////////////////////////////////////
 
 //un curso tiene varios modulos
@@ -169,12 +169,24 @@ Course.hasMany(PrequizzResult, {
 })
 
 
+// Un curso puede estar asociado con muchos usuarios?
+Course.belongsToMany(User, {
+    through: CourseStudent,
+    foreignKey: 'course_id',
+});
 
+// Un curso puede pertenecer a varias campañas
+Course.belongsToMany(Campaign, {
+    through: CampaignCourse,
+    foreignKey: 'course_id',
+});
 
+// Un curso puede tener muchas relaciones de estudiante de curso
+Course.hasMany(CourseStudent, { foreignKey: 'course_id' });
 
 
 // Un curso puede pertenecer a varias campañas
-Course.belongsToMany(Campaign, { through: CampaignCourse, foreignKey: 'campaign_id' });
+Course.belongsToMany(Campaign, { through: CampaignCourse, foreignKey: 'course_id' });
 
 
 // Un curso puede tener muchas relaciones de curso de campaña
@@ -182,9 +194,7 @@ Course.hasMany(CampaignCourse, { foreignKey: 'course_id' });
 
 
 
-// Un curso puede tener muchas relaciones de estudiante de curso
-Course.hasMany(CourseStudent, { foreignKey: 'course_id' });
-
+///////////////////////////////////////////////////////////////////
 
 
 // Un estudiante de curso pertenece a un usuario
@@ -201,7 +211,6 @@ CourseStudent.belongsTo(CampaignCourse, { foreignKey: 'course_id' });
 CourseStudent.hasMany(PrequizzResult, { foreignKey: 'course_id' });
 
 
-
 ///////////////////////////////////////////////////////////////////////////
 
 // Un curso de campaña pertenece a una campaña
@@ -210,6 +219,8 @@ CampaignCourse.belongsTo(Campaign, { foreignKey: 'campaign_id' });
 // Un curso de campaña pertenece a un curso
 CampaignCourse.belongsTo(Course, { foreignKey: 'course_id' });
 
+// Un curso de campaña pertenece a un estudiante de curso
+CampaignCourse.belongsTo(CourseStudent, { foreignKey: 'course_id' });
 
 // Un curso de campaña está asociado con una campaña
 CampaignCourse.belongsTo(Campaign, {
@@ -234,10 +245,6 @@ QuizzType.hasMany(Quizz, {
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-// Un cuestionario de diccionario pertenece a un módulo
-DictionaryQuiz.belongsTo(Module, {
-    foreignKey: 'dictionary_id',
-});
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
