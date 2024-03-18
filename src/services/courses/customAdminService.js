@@ -1,7 +1,9 @@
 const Course = require('../../models/courseModel')
+const CourseStudent = require('../../models/courseStudent');
 const User = require('../../models/userModel');
 const CampaignCourse = require('../../models/campaignCourse');
 const CampaignUser = require('../../models/campaignUser');
+const Campaign = require('../../models/campaignModel');
 exports.getCoursesModules = async () => {
     try {
         const courseModules = await Course.findAll({
@@ -34,21 +36,28 @@ exports.getCoursesAndUsers = async () => {
     try {
         const coursesWithUsers = []
         const users = await User.findAll();
-        const courses = await Course.findAll();
-        const campaignUsers = await CampaignUser.findAll();
-        
+        const courses = await CampaignCourse.findAll();
+        const studentCourses = await CampaignUser.findAll();
         courses.forEach(course => {
-            const usersInCourse = campaignUsers
-                .filter(cu => cu.course_id === course.course_id)
-                .map(cu => users.find(user => user.user_id === cu.user_id));
-            
+            const coursesOfUsers = [];
+            studentCourses.forEach(studentCourse => {
+                if (course.course_id === studentCourse.course_id) {
+                    const user = users.find(user => user.user_id === studentCourse.user_id);
+                    if (user) {
+                        coursesOfUsers.push(user);
+                    }
+                }
+            });
             coursesWithUsers.push({
                 course,
-                users: usersInCourse
+                users: coursesOfUsers
             });
         });
-        
-        return coursesWithUsers;
+        if (coursesWithUsers) {
+            return coursesWithUsers;
+        } else {
+            return null;
+        }
     } catch (error) {
         console.error('Error al obtener cursos y usuarios:', error);
         throw error;
