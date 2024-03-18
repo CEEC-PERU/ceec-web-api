@@ -32,13 +32,16 @@ app.use('/api/evaluations', require('./src/routes/courses/evaluationRoutes'));
 app.use('/api/quizzes', require('./src/routes/courses/quizzRoutes'));
 app.use('/api/custom', require('./src/routes/courses/customAdminRoutes'));
 app.use('/api/appsession', require('./src/routes/users/appSessionRoutes'))
+app.use('/api/usersesion', require('./src/routes/users/userSesionRoutes'))
+app.use('/api/users', require('./src/routes/users/userRoutes'))
 
 app.use('/api/dictionaryquizz', require('./src/routes/courses/dictionaryQuizzRoutes'));
 app.use('/api/prequizzresults', require ('./src/routes/courses/prequizzResultRoutes'))
 app.use('/api/evaluation', require('./src/routes/courses/customEvaluationRoutes'));
 app.use('/api/prequizzresult', require('./src/routes/courses/customPrequizzRoutes'));
 app.use('/api/image-service', require('./src/routes/courses/imageRoutes'))
-app.use('/api/users', require('./src/routes/users/userRoutes'))
+
+
 app.use('/api/profiles', require('./src/routes/users/profileRoutes'))
 app.use('/api/quizztypes', require('./src/routes/courses/quizzTypeRoutes'));
 app.use('/api/flashcard', require('./src/routes/courses/flashCardRoutes'));

@@ -53,59 +53,37 @@ const getSessionStatistics = async ({ startDate, endDate }) => {
     }
 };
 
-const getLastLogin = async (userId) => {
-    try {
-        const lastSession = await AppSession.findOne({
-            where: {
-                user_id: userId,
-            },
-            order: [['start_time', 'DESC']],
-        });
-        return lastSession ? lastSession.start_time : null;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-};
 
-const getInactiveUsers = async () => {
+const findUsersWithoutSessions = async () => {
     try {
-        const activeUserIds = await AppSession.findAll({
-            attributes: ['user_id'],
-            group: ['user_id']
-        });
-        const inactiveUsers = await User.findAll({
+        const usersWithoutSessions = await User.findAll({
+            include: [{
+                model: AppSession,
+                required: false // Para incluir usuarios sin sesiones
+            }],
             where: {
-                user_id: {
-                    [Op.notIn]: activeUserIds.map(activeUser => activeUser.user_id)
-                }
+                '$AppSessions.id$': null // Filtrar usuarios sin sesiones
             }
         });
-        return inactiveUsers;
+
+        return usersWithoutSessions;
     } catch (error) {
-        console.error(error);
+        console.error('Error al buscar usuarios sin sesiones:', error);
         throw error;
     }
 };
 
-const getUsersActivityCount = async (date) => {
+const findLastLoginDate = async (userId) => {
     try {
-        const startOfDay = subDays(date, 1);
-        const endOfDay = new Date(date);
-        const activityCounts = await AppSession.count({
-            where: {
-                start_time: {
-                    [Op.between]: [startOfDay, endOfDay]
-                }
-            },
-            attributes: ['user_id'],
-            group: ['user_id']
+        const lastSession = await AppSession.findOne({
+            where: { user_id: userId },
+            order: [['start_time', 'DESC']] // Ordenar por la sesión más reciente
         });
-        return activityCounts;
+
+        return lastSession ? lastSession.start_time : null;
     } catch (error) {
-        console.error(error);
+        console.error('Error al buscar última sesión de usuario:', error);
         throw error;
     }
 };
-
-module.exports = { createAppSessionService, getSessionStatistics, getLastLogin, getInactiveUsers, getUsersActivityCount };
+module.exports = { createAppSessionService, getSessionStatistics, findLastLoginDate, findUsersWithoutSessions };
