@@ -1,4 +1,5 @@
 const AppSession = require("../../models/appSessionModel")
+const User = require('../../models/userModel');
 
 const { Op } = require('sequelize');
 
@@ -52,5 +53,59 @@ const getSessionStatistics = async ({ startDate, endDate }) => {
     }
 };
 
+const getLastLogin = async (userId) => {
+    try {
+        const lastSession = await AppSession.findOne({
+            where: {
+                user_id: userId,
+            },
+            order: [['start_time', 'DESC']],
+        });
+        return lastSession ? lastSession.start_time : null;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
 
-module.exports = { createAppSessionService, getSessionStatistics }
+const getInactiveUsers = async () => {
+    try {
+        const activeUserIds = await AppSession.findAll({
+            attributes: ['user_id'],
+            group: ['user_id']
+        });
+        const inactiveUsers = await User.findAll({
+            where: {
+                user_id: {
+                    [Op.notIn]: activeUserIds.map(activeUser => activeUser.user_id)
+                }
+            }
+        });
+        return inactiveUsers;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+const getUsersActivityCount = async (date) => {
+    try {
+        const startOfDay = subDays(date, 1);
+        const endOfDay = new Date(date);
+        const activityCounts = await AppSession.count({
+            where: {
+                start_time: {
+                    [Op.between]: [startOfDay, endOfDay]
+                }
+            },
+            attributes: ['user_id'],
+            group: ['user_id']
+        });
+        return activityCounts;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+module.exports = { createAppSessionService, getSessionStatistics, getLastLogin, getInactiveUsers, getUsersActivityCount };

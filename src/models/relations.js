@@ -18,10 +18,6 @@ const DictionaryQuiz = require('./dictionaryModel');
 const CampaignUser = require('./campaignUser');
 
 
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // Si un CampaignUser puede tener varios CampaignCourse
 CampaignUser.hasMany(CampaignCourse, {

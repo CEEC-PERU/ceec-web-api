@@ -10,7 +10,6 @@ exports.getCampaignUserWithCourses = async (userId) => {
       where: { user_id: userId },
       include: [User]
     });
-
     const campaignCourses = await Promise.all(
       campaignUsers.map(async (campaignUser) => {
         const courses = await CampaignCourse.findAll({

@@ -1,4 +1,4 @@
-const { createAppSessionService, getSessionStatistics } = require("../../services/users/appSessionService");
+const { createAppSessionService, getSessionStatistics  , getInactiveUsers , getLastLogin , getUsersActivityCount} = require("../../services/users/appSessionService");
 const { parseISO, startOfWeek, subWeeks, endOfWeek } = require('date-fns');
 
 const appSessionController = async (req, res) => {
@@ -66,5 +66,36 @@ const getAppSessions = async (req, res) => {
         res.status(500).json(error);
     }
 }
+const getInactiveUsersController = async (req, res) => {
+    try {
+        const inactiveUsers = await getInactiveUsers();
+        res.status(200).json(inactiveUsers);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+}
 
-module.exports = { appSessionController, getAppSessions }
+const getLastLoginController = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const lastLogin = await getLastLogin(userId);
+        res.status(200).json(lastLogin);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+}
+
+const getUsersActivityCountController = async (req, res) => {
+    try {
+        const { date } = req.params;
+        const activityCounts = await getUsersActivityCount(new Date(date));
+        res.status(200).json(activityCounts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+}
+
+module.exports = { appSessionController, getAppSessions, getInactiveUsersController, getLastLoginController, getUsersActivityCountController };

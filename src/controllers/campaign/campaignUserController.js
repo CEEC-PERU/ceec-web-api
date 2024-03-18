@@ -7,6 +7,7 @@ exports.getCampaignUserWithCourses = async (req, res) => {
     res.json(campaignUser);
   } catch (error) {
     res.status(500).send(error.message);
+   
   }
 };
 
