@@ -31,15 +31,14 @@ exports.getCoursesByUser = async (user_id) => {
         throw error;
     }
 }
-
 exports.getCoursesAndUsers = async () => {
     try {
         const coursesWithUsers = []
         const users = await User.findAll();
-        const courses = await CampaignCourse.findAll();
-        const studentCourses = await CampaignUser.findAll();
+        const courses = await Course.findAll();
+        const studentCourses = await CourseStudent.findAll();
         courses.forEach(course => {
-            const coursesOfUsers = [];
+            const coursesOfUsers = []; 
             studentCourses.forEach(studentCourse => {
                 if (course.course_id === studentCourse.course_id) {
                     const user = users.find(user => user.user_id === studentCourse.user_id);

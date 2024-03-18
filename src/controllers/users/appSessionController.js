@@ -44,6 +44,7 @@ const getAppSessions = async (req, res) => {
             sessionDate.setDate(sessionDate.getDate() + 1);
 
             return {
+                
                 ...session,
                 day: sessionDate
                     .toLocaleDateString('es-ES', { weekday: 'long' }).charAt(0).toUpperCase() +

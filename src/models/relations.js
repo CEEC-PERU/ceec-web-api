@@ -3,7 +3,7 @@ const Quizz = require('./quizzModel')
 const QuizzType = require('./quizzTypeModel')
 const Course = require('./courseModel');
 const Module = require('./moduleModel');
-
+const CourseStudent = require('./courseStudent');
 const User = require('./userModel');
 const AppSession = require('./appSessionModel');
 const Profile = require('./profileModel');
@@ -16,6 +16,8 @@ const CampaignCourse = require('./campaignCourse');
 const State = require('./StateModel');
 const DictionaryQuiz = require('./dictionaryModel');
 const CampaignUser = require('./campaignUser');
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,6 +180,25 @@ Course.belongsToMany(Campaign, { through: CampaignCourse, foreignKey: 'campaign_
 // Un curso puede tener muchas relaciones de curso de campaña
 Course.hasMany(CampaignCourse, { foreignKey: 'course_id' });
 
+
+
+// Un curso puede tener muchas relaciones de estudiante de curso
+Course.hasMany(CourseStudent, { foreignKey: 'course_id' });
+
+
+
+// Un estudiante de curso pertenece a un usuario
+CourseStudent.belongsTo(User, { foreignKey: 'user_id' });
+
+// Un estudiante de curso pertenece a un curso
+CourseStudent.belongsTo(Course, { foreignKey: 'course_id' });
+
+// Un estudiante de curso pertenece a un curso de campaña
+CourseStudent.belongsTo(CampaignCourse, { foreignKey: 'course_id' });
+
+
+// Un estudiante de curso puede tener varios resultados de prequizz
+CourseStudent.hasMany(PrequizzResult, { foreignKey: 'course_id' });
 
 
 
