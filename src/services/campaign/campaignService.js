@@ -1,8 +1,17 @@
 const Campaign = require('../../models/campaignModel');
+const Course = require('../../models/courseModel');
+const CampaignUser = require('../../models/campaignUser');
+const CampaignCourse = require('../../models/campaignCourse');
+const sequelize = require('sequelize');
 
 exports.getAllCampaigns = async () => {
   try {
-    return await Campaign.findAll();
+    return await Campaign.findAll({
+      
+      order: [
+        ['name', 'DESC']
+      ]
+    });
   } catch (error) {
     console.error(error);
   }

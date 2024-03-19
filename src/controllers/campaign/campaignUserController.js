@@ -1,13 +1,16 @@
 const campaignUserService = require('../../services/campaign/campaignUserService');
 
-exports.getCampaignUserWithCourses = async (req, res) => {
+exports.getCampaignUserWithCourses  = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const campaignUser = await campaignUserService.getCampaignUserWithCourses(userId);
-    res.json(campaignUser);
+    const { user_id } = req.params;
+    const result = await campaignUserService.getCampaignUserWithCourses(user_id);
+    if (!result) {
+      return res.status(404).json({ message: 'User not found or not associated with any campaign' });
+    }
+    return res.status(200).json(result);
   } catch (error) {
-    res.status(500).send(error.message);
-   
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 

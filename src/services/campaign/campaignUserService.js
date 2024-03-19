@@ -1,32 +1,33 @@
-const CampaignCourse = require('../../models/campaignCourse');
+
 const Campaign = require('../../models/campaignModel');
 const CampaignUser = require('../../models/campaignUser');
+const CampaignCourse = require('../../models/campaignCourse');
 const Course = require('../../models/courseModel');
 const User =require('../../models/userModel');
 
 exports.getCampaignUserWithCourses = async (userId) => {
   try {
-    const campaignUsers = await CampaignUser.findAll({
+    // Buscar la campaña a la que pertenece el usuario
+    const userCampaign = await CampaignUser.findOne({
       where: { user_id: userId },
-      include: [User]
+      include: [{ model: Campaign }],
     });
-    const campaignCourses = await Promise.all(
-      campaignUsers.map(async (campaignUser) => {
-        const courses = await CampaignCourse.findAll({
-          where: { campaign_id: campaignUser.campaign_id },
-          include: [Course]
-        });
-        return { ...campaignUser.toJSON(), CampaignCourse: courses };
-      })
-    );
 
-    return campaignCourses;
+    if (!userCampaign) {
+      return null; // El usuario no está asociado a ninguna campaña
+    }
+
+    const campaignCourses = await CampaignCourse.findAll({
+      where: { campaign_id: userCampaign.campaign_id },
+      include: [{ model: Course }],
+    });
+
+    return { /*userCampaign,*/ campaignCourses };
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-
 
 exports.createCampaignUser = async (campaignUser) => {
   try {
@@ -73,23 +74,3 @@ exports.deleteCampaignUser = async (id) => {
   }
 };
 
-exports.getCampaignUserWithCourses = async (userId) => {
-  try {
-    return await CampaignUser.findAll({
-      where: { user_id: userId },
-      include: [
-        {
-          model: CampaignCourse,
-          include: [
-            {
-              model: Course,
-            }
-          ],
-        }
-      ],
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};

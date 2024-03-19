@@ -1,6 +1,7 @@
 const CampaignCourseService = require('../../services/campaign/campaignCourseService');
 
-exports.getAllCampaignCourses = async (req, res) => {
+exports.
+getAllCampaignCourses = async (req, res) => {
   try {
     const campaignCourses = await CampaignCourseService.getAllCampaignCourses();
     res.json(campaignCourses);

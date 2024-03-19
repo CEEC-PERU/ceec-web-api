@@ -2,6 +2,9 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 const Campaign = require('./campaignModel');
 const Course = require('./courseModel');
+const CampaignUser= require('./campaignUser');
+
+
 const CampaignCourse = sequelize.define('CampaignCourse', {
   campaign_course_id: {
         type: DataTypes.INTEGER,
@@ -29,6 +32,7 @@ const CampaignCourse = sequelize.define('CampaignCourse', {
   tableName: 'campaign_courses',
   timestamps: false,
 });
+
 
 
 module.exports = CampaignCourse;

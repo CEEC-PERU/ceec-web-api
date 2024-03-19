@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const campaignUserController = require('../../controllers/campaign/campaignUserController');
 
-router.get('/courses/:userId', campaignUserController.getCampaignUserWithCourses);
-router.post('/', campaignUserController.createCampaignUser);
-router.get('/:id', campaignUserController.getCampaignUser);
-router.put('/:id', campaignUserController.updateCampaignUser);
-router.delete('/:id', campaignUserController.deleteCampaignUser);
+const authenticateToken = require('../../middlewares/authenticationMiddleware');
+//obtener  cursos asignados a la campaña por user_id : http://localhost:4100/api/campaignuser/courses/7
+router.get('/courses/:user_id', authenticateToken, campaignUserController.getCampaignUserWithCourses);
+router.post('/', authenticateToken, campaignUserController.createCampaignUser);
+router.get('/:id', authenticateToken, campaignUserController.getCampaignUser);
+router.put('/:id', authenticateToken, campaignUserController.updateCampaignUser);
+router.delete('/:id', authenticateToken, campaignUserController.deleteCampaignUser);
 
 module.exports = router;

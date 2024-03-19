@@ -19,10 +19,10 @@ const CampaignUser = require('./campaignUser');
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// Si un CampaignUser puede tener varios CampaignCourse
-CampaignUser.hasMany(CampaignCourse, {
-    foreignKey: 'campaign_id',
-});
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -54,8 +54,8 @@ User.hasMany(PrequizzResult,{
     foreignKey: 'user_id',
 });
 
-
-
+// Un usuario se le asigna una campaña (relación a través de CampaignUser)
+User.belongsToMany(Campaign, { through: CampaignUser, foreignKey: 'user_id' });
 
 // Un usuario pertenece a un rol
 User.belongsTo(Role, {
@@ -170,27 +170,22 @@ Course.hasMany(PrequizzResult, {
 
 
 
-
-// Un curso puede pertenecer a varias campañas
-Course.belongsToMany(Campaign, { through: CampaignCourse, foreignKey: 'campaign_id' });
-
-
 // Un curso puede tener muchas relaciones de curso de campaña
 Course.hasMany(CampaignCourse, { foreignKey: 'course_id' });
 
+Course.hasMany(Campaign,  { foreignKey: 'campaign_id' });
+///////////////////////////////////////////////////////////////////////
 
 
 
 ///////////////////////////////////////////////////////////////////////////
 
-// Un curso de campaña pertenece a una campaña
-CampaignCourse.belongsTo(Campaign, { foreignKey: 'campaign_id' });
 
-// Un curso de campaña pertenece a un curso
+// varios curso de campaña pertenece a un curso
 CampaignCourse.belongsTo(Course, { foreignKey: 'course_id' });
 
 
-// Un curso de campaña está asociado con una campaña
+// varios curso de campaña están asociado con una campaña
 CampaignCourse.belongsTo(Campaign, {
     foreignKey: 'campaign_id',
 });
@@ -201,6 +196,17 @@ CampaignCourse.belongsTo(Course, {
 });
 
 
+// Un curso de campaña está asociado con un curso
+CampaignCourse.belongsTo(CampaignUser, {
+    foreignKey: 'campaign_id',
+  });
+
+
+  CampaignUser.belongsTo(Campaign, {
+    foreignKey: 'campaign_id',
+  });
+  
+  
 ///////////////////////////////////////////////////////////////////////
 
 
@@ -229,12 +235,11 @@ AppSession.belongsTo(User, {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Una campaña puede estar asociada con muchos cursos
-Campaign.belongsToMany(Course, {
-    through: CampaignCourse,
-    foreignKey: 'campaign_id',
-});
 
+// Un usuario se le asigna una campaña (relación a través de CampaignUser)
+Campaign.belongsToMany(User, { through: CampaignUser, foreignKey: 'campaign_id' });
+
+Campaign.belongsToMany(Course, { through: CampaignCourse, foreignKey: 'campaign_id' });
 
 //////////////////////////////////////////////////////////////////////////
 

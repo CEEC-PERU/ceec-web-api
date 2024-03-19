@@ -1,5 +1,5 @@
 const Course = require('../../models/courseModel');
-const CourseStudent = require('../../models/courseStudent');
+const CourseCampaign = require('../../models/campaignCourse');
 const Module = require('../../models/moduleModel');
 const sequelize = require('sequelize');
 
@@ -59,9 +59,11 @@ exports.getCoursesWithModules = async () => {
   try {
     const coursesWithModules = await Course.findAll({
       attributes: {
+        //contar usuarios por curso, ahora e spor campaña
+/*        
         include: [
           [sequelize.fn('COUNT', sequelize.col('CourseStudents.user_id')), 'user_count']
-        ],
+        ],*/
         exclude: ['id']
       },
       include: [
@@ -74,12 +76,7 @@ exports.getCoursesWithModules = async () => {
             'name'
           ],
         },
-        {
-          model: CourseStudent,
-          as: 'CourseStudents',
-          attributes: [],
-          required: false,
-        },
+        
       ],
       group: ['Course.course_id', 'modules.module_id'],
       order: [
@@ -92,3 +89,36 @@ exports.getCoursesWithModules = async () => {
     throw new Error('Error al obtener cursos con módulos. Detalles en la consola.');
   }
 }
+
+
+/*
+exports.getCoursesWithModules = async () => {
+  try {
+    const coursesWithModules = await CourseCampaign.findAll({
+     
+      include: [
+        {
+          model: Course,
+          include: [
+            {
+              model: Module,
+              as: 'modules',
+              attributes: [
+                'is_active',
+                'created_at',
+                'name'
+              ],
+            },
+            
+          ],
+        },
+        
+      ],
+
+    });
+    return coursesWithModules;
+  } catch (error) {
+    console.error('Error al obtener cursos con módulos:', error);
+    throw new Error('Error al obtener cursos con módulos. Detalles en la consola.');
+  }
+}*/
