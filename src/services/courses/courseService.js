@@ -55,33 +55,39 @@ exports.deleteCourse = async (courseId) => {
 };
 
 
-exports.getCoursesWithModules = async () => {
+
+exports.getCoursesWithModules = async (campaignId) => {
   try {
-    const coursesWithModules = await Course.findAll({
+    const coursesWithModules = await CourseCampaign.findAll({
+      where: { campaign_id: campaignId },
       attributes: {
-        //contar usuarios por curso, ahora e spor campaña
+                //contar usuarios por curso, ahora e spor campaña
 /*        
         include: [
           [sequelize.fn('COUNT', sequelize.col('CourseStudents.user_id')), 'user_count']
         ],*/
         exclude: ['id']
+
       },
       include: [
         {
-          model: Module,
-          as: 'modules',
-          attributes: [
-            'is_active',
-            'created_at',
-            'name'
+          model: Course,
+          include: [
+            {
+              model: Module,
+              as: 'modules',
+              attributes: ['is_active', 'created_at', 'name'],
+              order: [
+                ['created_at', 'DESC']
+              ]
+            },       
           ],
+          group: ['Course.course_id', 'modules.module_id'],
+          order: [
+            ['created_at', 'DESC']
+          ]
         },
-        
       ],
-      group: ['Course.course_id', 'modules.module_id'],
-      order: [
-        ['created_at', 'DESC']
-      ]
     });
     return coursesWithModules;
   } catch (error) {
@@ -89,7 +95,6 @@ exports.getCoursesWithModules = async () => {
     throw new Error('Error al obtener cursos con módulos. Detalles en la consola.');
   }
 }
-
 
 /*
 exports.getCoursesWithModules = async () => {

@@ -239,7 +239,6 @@ AppSession.belongsTo(User, {
 // Un usuario se le asigna una campaña (relación a través de CampaignUser)
 Campaign.belongsToMany(User, { through: CampaignUser, foreignKey: 'campaign_id' });
 
-Campaign.belongsToMany(Course, { through: CampaignCourse, foreignKey: 'campaign_id' });
 
 //////////////////////////////////////////////////////////////////////////
 
