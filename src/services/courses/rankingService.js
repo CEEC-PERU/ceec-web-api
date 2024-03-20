@@ -16,11 +16,12 @@ exports.getRankingCourseEvaluation = async ( course_id) => {
                 model: Course,
                 where: { course_id },
                 include: [
-                  {
+                  { //modulo , 
                     model: Evaluation,
                     include: [
                       {
                         model: EvaluationResult,
+                        //usuarios
                         required: false,
                         attributes: [
                           'total_score',
