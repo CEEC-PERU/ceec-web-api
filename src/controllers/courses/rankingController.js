@@ -1,12 +1,14 @@
 // rankingController.js
 const rankingService = require('../../services/courses/rankingService');
 
-exports.getRankingCourseEvaluation = async (req, res) => {
+const getAverageScores = async (req, res) => {
+  const { course_id } = req.params;
   try {
-    const { course_id } = req.params;
-    const ranking = await rankingService.getRankingCourseEvaluation(course_id);
-    res.json(ranking);
+    const averageScores = await rankingService.getAverageScoresByCourseAndUser(course_id);
+    res.json(averageScores);
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: error.message });
   }
-}
+};
+
+module.exports = { getAverageScores };
