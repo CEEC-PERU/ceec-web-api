@@ -8,6 +8,6 @@ const authenticateToken = require('../../middlewares/authenticationMiddleware');
 // es decir de el total_score de cada evaluation result ,pero primero verificar si se creo el modulo
 router.get('/:course_id',authenticateToken, rankingController.getAverageScores);
 router.get('/eva/:campaign_id',authenticateToken, rankingCampEvaController.getAverageScores);
+router.get('/excel/:course_id',authenticateToken, rankingController.generateExcel);
 
-//traer 
 module.exports = router;

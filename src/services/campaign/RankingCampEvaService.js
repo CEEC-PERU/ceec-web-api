@@ -10,7 +10,7 @@ const { sequelize } = require('../../config/database');
 const Campaign = require('../../models/campaignModel');
 
 
-//promedio de cursos todos los cursos de la campaña por usuario.
+//promedio de cursos todos los cursos de la campaña por usuario.//corregigr
 const getAverageScoresByCourseAndUser = async (campaign_id) => {
     try {
       const campaignCourses = await CampaignCourse.findAll({

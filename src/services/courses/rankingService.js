@@ -3,6 +3,7 @@ const Profile = require('../../models/profileModel');
 const User = require('../../models/userModel');
 const Evaluation = require('../../models/evaluationModel');
 const Module = require('../../models/moduleModel');
+
 const Course = require('../../models/courseModel');
 const CampaignUser = require('../../models/campaignUser');
 const CampaignCourse = require('../../models/campaignCourse');
@@ -128,4 +129,4 @@ const getAverageScoresByCourseAndUser = async (course_id) => {
   }
 };
 
-module.exports = { getAverageScoresByCourseAndUser };
+module.exports = { getAverageScoresByCourseAndUser};
