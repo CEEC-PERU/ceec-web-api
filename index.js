@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 4100;
 const jwt = require('jsonwebtoken')
 const { authenticateDatabase } = require('./src/config/migration');
 const morgan = require('morgan');
+const bcrypt = require('bcrypt');
 authenticateDatabase();
 
 const SocketService = require('./src/services/socketService');
@@ -58,4 +59,11 @@ SocketService(server);
 
 server.listen(PORT, () => {
   console.log(`Server is running 🚀🚀🚀`);
+ /* const password = '123456';
+  const saltRounds = 10;
+
+bcrypt.hash(password, saltRounds, function(err, hash) {
+  // Store hash in your password DB.
+  console.log(hash); // This is the encrypted password
+});*/
 });
