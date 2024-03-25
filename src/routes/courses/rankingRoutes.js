@@ -10,6 +10,6 @@ const authenticateToken = require('../../middlewares/authenticationMiddleware');
 router.get('/:course_id',authenticateToken, rankingController.getAverageScores);
 router.get('/eva/:campaign_id',authenticateToken, rankingCampEvaController.getAverageScores);
 router.get('/eva/pre/:campaign_id',authenticateToken, rankingCampEvaController.getAverageEvaPrequizz);
-router.get('/excel/:course_id',authenticateToken, rankingController.generateExcel);
+router.get('/excel/:course_id',rankingController.generateExcel);
 
 module.exports = router;
