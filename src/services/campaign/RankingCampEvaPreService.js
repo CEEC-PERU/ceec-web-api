@@ -5,14 +5,15 @@ const User = require('../../models/userModel');
 const Evaluation = require('../../models/evaluationModel');
 const Module = require('../../models/moduleModel');
 const Course = require('../../models/courseModel');
-
+const PrequizzResult = require('../../models/preQuizzResultModel');
+const Prequizz = require('../../models/preQuizzModel');
 const CampaignUser = require('../../models/campaignUser');
 const CampaignCourse = require('../../models/campaignCourse');
 const { sequelize } = require('../../config/database');
 const Campaign = require('../../models/campaignModel');
 
 // Definición de la función asincrónica que obtiene los promedios de puntajes por usuario y curso
-const getAverageScoresByCourseAndUser = async (campaign_id) => {
+const getAverageScoresByCampaignQuiz = async (campaign_id) => {
   try {
     // Obtener los IDs de usuario asociados con la campaña
     const campaignUsers = await CampaignUser.findAll({
@@ -33,6 +34,8 @@ const getAverageScoresByCourseAndUser = async (campaign_id) => {
       attributes: ['course_id'],
       
     });
+
+    
 
     // Obtener todas las evaluaciones del curso
     const allEvaluations = await Evaluation.findAll({
@@ -224,4 +227,4 @@ return sortedResults;
   }
 };
 
-module.exports = { getAverageScoresByCourseAndUser };
+module.exports = { getAverageScoresByCampaignQuiz };
