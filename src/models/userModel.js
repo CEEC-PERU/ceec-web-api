@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 const bcrypt = require('bcrypt');
 const Role = require('./roleModel');
-
+const Cliente = require('./ClientModel');
 const User = sequelize.define('User', {
   user_id: {
     type: DataTypes.INTEGER,
@@ -15,6 +15,13 @@ const User = sequelize.define('User', {
   },
   password: {
     type: DataTypes.STRING
+  },
+  client_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Cliente,
+      key: 'client_id',
+    },
   },
   role_id: {
     type: DataTypes.INTEGER,
@@ -44,5 +51,7 @@ User.comparePassword = async (password, hashedPassword) => {
   const isMatch = await bcrypt.compare(password, hashedPassword);
   return isMatch
 }
+
+
 
 module.exports = User;

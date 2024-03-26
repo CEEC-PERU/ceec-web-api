@@ -6,6 +6,7 @@ const User = require('../../models/userModel');
 const Profile = require('../../models/profileModel');
 const bcrypt = require('bcrypt');
 const Module = require('../../models/moduleModel');
+const Client = require('../../models/ClientModel');
 
 async function createUser(userData) {
   try {
@@ -144,7 +145,27 @@ async function getAllStudents() {
   });
 }
 
+async function getByRoleIdAndClientId() {
+  return await User.findAll({
+    attributes: ['user_id', 'email', 'client_id' , 'role_id'],
+    where: {
+      role_id: 3,
+    },
+    include: [
+      {
+        model: Client,
+        as: 'client',
+        attributes: ['client_id', 'name'],
+      },
+      {
+        model: Profile,
+        attributes: ['first_name', 'last_name', 'phone', 'profile_picture'],
+      }
+    ],
+  });
+}
 module.exports = {
+  getByRoleIdAndClientId,
   createUser,
   getUserById,
   updateUser,

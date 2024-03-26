@@ -16,6 +16,7 @@ const CampaignCourse = require('./campaignCourse');
 const State = require('./StateModel');
 const DictionaryQuiz = require('./dictionaryModel');
 const CampaignUser = require('./campaignUser');
+const Client = require('./ClientModel');
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,6 +63,20 @@ User.belongsTo(Role, {
     foreignKey: 'role_id',
 });
 
+
+
+User.belongsTo(Client, {
+    foreignKey: 'client_id',
+    as: 'client',
+  });
+  
+
+//////////////////////////////////////////////////////////
+
+Client.hasMany(User, {
+    foreignKey: 'client_id',
+    as: 'users',
+});
 
 //////////////////////////////////////////////////////////////////
 

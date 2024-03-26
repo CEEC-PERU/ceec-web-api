@@ -10,6 +10,7 @@ router.post('/new', userController.createUser);
 router.get('/users/:id', authenticateToken, userController.getUserById);
 router.put('/users/:id', authenticateToken, userController.updateUser);
 router.delete('/users/:id', authenticateToken, userController.deleteUser);
+router.get('/useradmin', authenticateToken, userController.getByRoleIdAndClientId);
 
 
 //todos los usuarios : admin , estudiantes : http://localhost:4100/api/users/all

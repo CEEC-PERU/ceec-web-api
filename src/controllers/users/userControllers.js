@@ -11,6 +11,7 @@ async function createUser(req, res) {
   }
 }
 
+
 async function getUserById(req, res) {
   try {
     const userId = req.params.id;
@@ -124,5 +125,10 @@ async function getAllStudents(req, res) {
   }
 }
 
+async function getByRoleIdAndClientId(req, res){
+  const users = await userService.getByRoleIdAndClientId();
+  res.json(users);
+}
 
-module.exports = { createUser, getUserById, updateUser, deleteUser, getAllUsers, getCourseStudentsStatistics, getUsersNotEnrolledInCourse , getAllStudents };
+
+module.exports = { getByRoleIdAndClientId, createUser, getUserById, updateUser, deleteUser, getAllUsers, getCourseStudentsStatistics, getUsersNotEnrolledInCourse , getAllStudents };
