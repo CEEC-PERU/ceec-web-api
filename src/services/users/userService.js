@@ -18,6 +18,23 @@ async function createUser(userData) {
   }
 }
 
+async function createUserAdmin(data) {
+  try {
+    console.log(data); // Log the data object
+    data.password = await bcrypt.hash(data.password, 10);
+    data.role_id = 3; 
+    return await User.create({
+      email: data.email,
+      password: data.password,
+      role_id: data.role_id,
+      client_id: data.client_id,
+    
+    });
+  } catch (error) {
+    console.error(error); // Log the error object
+    throw new Error('Error al crear el usuario');
+  }
+}
 
 async function getAllCourseStudentsWithDetails(course_id) {
   try {
@@ -164,7 +181,9 @@ async function getByRoleIdAndClientId() {
     ],
   });
 }
+
 module.exports = {
+  createUserAdmin,
   getByRoleIdAndClientId,
   createUser,
   getUserById,

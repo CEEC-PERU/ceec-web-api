@@ -5,7 +5,7 @@ const clientController = {
     const client = await clientService.create(req.body);
     res.json(client);
   },
-
+  
   getAll: async (req, res) => {
     const clients = await clientService.getAll();
     res.json(clients);

@@ -1,7 +1,5 @@
 const Client = require('../../models/ClientModel');
 const sequelize = require('sequelize');
-
-
 const clientService = {
   create: async (data) => {
     return await Client.create(data);

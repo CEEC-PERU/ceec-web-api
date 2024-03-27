@@ -12,6 +12,18 @@ async function createUser(req, res) {
 }
 
 
+
+async function createUserAdmin(req, res) {
+  try {
+    const userData = req.body;
+    const user = await userService.createUserAdmin(userData);
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al crear el usuario' });
+  }
+}
+
 async function getUserById(req, res) {
   try {
     const userId = req.params.id;
@@ -130,5 +142,4 @@ async function getByRoleIdAndClientId(req, res){
   res.json(users);
 }
 
-
-module.exports = { getByRoleIdAndClientId, createUser, getUserById, updateUser, deleteUser, getAllUsers, getCourseStudentsStatistics, getUsersNotEnrolledInCourse , getAllStudents };
+module.exports = {createUserAdmin, getByRoleIdAndClientId, createUser, getUserById, updateUser, deleteUser, getAllUsers, getCourseStudentsStatistics, getUsersNotEnrolledInCourse , getAllStudents };
