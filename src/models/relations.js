@@ -216,11 +216,13 @@ CampaignCourse.belongsTo(CampaignUser, {
     foreignKey: 'campaign_id',
   });
 
+  ///////////////////////////////////////////////////////////
 
   CampaignUser.belongsTo(Campaign, {
     foreignKey: 'campaign_id',
   });
   
+  CampaignUser.belongsTo(User, { foreignKey: 'user_id' });
   
 ///////////////////////////////////////////////////////////////////////
 

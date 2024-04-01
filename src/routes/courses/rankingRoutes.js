@@ -7,9 +7,22 @@ const rankingCampEvaController = require('../../controllers/campaign/RankingCamp
 const authenticateToken = require('../../middlewares/authenticationMiddleware');
 //traer todas las notas del evaluation , que seria el promedio del curso por user ,
 // es decir de el total_score de cada evaluation result ,pero primero verificar si se creo el modulo
-router.get('/:course_id',authenticateToken, rankingController.getAverageScores);
+
+
+//obtener por course_id  y client_id lista de evaluaciones y prequizz?
+router.get('/:course_id/:client_id',authenticateToken, rankingController.getAverageScores);
+
+//antes
 router.get('/eva/:campaign_id',authenticateToken, rankingCampEvaController.getAverageScores);
-router.get('/eva/pre/:campaign_id',authenticateToken, rankingCampEvaController.getAverageEvaPrequizz);
+
+//obtener por filtro de campaña y cliente_id todos las evaluaciones y prequizz de cada usuario con su respectivo curso. , despues
+router.get('/eva/pre/:campaign_id/:client_id',authenticateToken, rankingCampEvaController.getAverageEvaPrequizz);
+
+//obtener todas las campañas por client_id , no hbailitado
+router.get('/campaign/:client_id/:campaign_id',authenticateToken, rankingCampEvaController.getAllDataCampaign);
+
+
+//obtener todas las campañas por client_id 
 router.get('/excel/:course_id',rankingController.generateExcel);
 
 module.exports = router;

@@ -33,7 +33,5 @@ const preQuizzResultModel = sequelize.define('preQuizzResultModel', {
     tableName: 'prequizzresults',
     timestamps: false,
 })
-
-
     
 module.exports = preQuizzResultModel;

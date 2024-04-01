@@ -12,8 +12,8 @@ const CampaignCourse = require('../../models/campaignCourse');
 const { sequelize } = require('../../config/database');
 const Campaign = require('../../models/campaignModel');
 const Client = require('../../models/ClientModel');
-
-// Definición de la función asincrónica que obtiene los promedios de puntajes por usuario y curso
+//Modificar para filtrar solo por client_id , BORRAR EL CAMPAIGN_ID y actualizar todo el codigo
+//no habilitado
 const getAverageScoresByCampaignQuiz = async (campaign_id , client_id ) => {
   try {
     // Obtener los IDs de usuario asociados con la campaña

@@ -3,15 +3,19 @@ const Profile = require('../../models/profileModel');
 const User = require('../../models/userModel');
 const Evaluation = require('../../models/evaluationModel');
 const Module = require('../../models/moduleModel');
-
+const PreQuizz  = require('../../models/preQuizzModel');
+const PrequizzResult = require('../../models/preQuizzResultModel');
 const Course = require('../../models/courseModel');
-const CampaignUser = require('../../models/campaignUser');
-const CampaignCourse = require('../../models/campaignCourse');
 const { sequelize } = require('../../config/database');
-const Campaign = require('../../models/campaignModel');
-//reutilizar para user_id con course_id y otro agregando prequizz con prequizzresult
-const getAverageScoresByCourseAndUser = async (course_id) => {
+
+const getAverageScoresByCourseAndUser = async (course_id, client_id) => {
   try {
+
+    const course = await Course.findOne({
+      where: { course_id },
+      attributes: ['name']
+    });
+
     // Obtener todas las evaluaciones del curso
     const allEvaluations = await Evaluation.findAll({
       where: {
@@ -47,7 +51,8 @@ const getAverageScoresByCourseAndUser = async (course_id) => {
         },
         {
           model: User,
-          attributes: ['email', 'role_id'],
+          attributes: ['email', 'role_id', 'client_id'],
+          where: { client_id : client_id},
           include: [
             {
               model: Profile,
@@ -61,30 +66,47 @@ const getAverageScoresByCourseAndUser = async (course_id) => {
     });
 
 
-    // Group results by user_id
-    const groupedResults = results.reduce((acc, result) => {
-      if (!acc[result.user_id]) {
-        acc[result.user_id] = {
-          User: result.User,
-          evaluations: [],
-          total_score_sum: 0,
-          average_score: 0
-        };
-      }
+    const prequizzResults = await PrequizzResult.findAll({
+      where: {
+        course_id
+      },
+     
+      attributes: ['user_id', 'course_id', 'puntaje', 'efectividad'],
 
-      acc[result.user_id].evaluations.push({
-        user_id: result.user_id,
-        evaluation_id: result.evaluation_id,
-        total_score: result.total_score,
-        Evaluation: result.Evaluation,
-        realize_exam: true // Set to true by default
-      });
-      // Add total_score to total_score_sum
-      acc[result.user_id].total_score_sum += parseInt(result.total_score);
+    });
 
-      return acc;
-    }, {});
+    const prequizz = await PreQuizz.findAll({
+      where: {
+        course_id
+      },
+    });
 
+  const groupedResults = results.reduce((acc, result) => {
+    if (!acc[result.user_id]) {
+      acc[result.user_id] = {
+        User: result.User,
+        Course: course, 
+        evaluations: [],
+        prequizzResults: [], 
+        total_score_sum: 0,
+        average_score: 0
+      };
+    }
+
+  acc[result.user_id].evaluations.push({
+    user_id: result.user_id,
+    evaluation_id: result.evaluation_id,
+    total_score: result.total_score,
+    Evaluation: result.Evaluation,
+    realize_exam: true // Set to true by default
+  });
+  // Add total_score to total_score_sum
+  acc[result.user_id].total_score_sum += parseInt(result.total_score);
+
+  return acc;
+}, {});
+
+   
     // Incluir evaluaciones que no están en los resultados
     allEvaluations.forEach(evaluation => {
       Object.keys(groupedResults).forEach(user_id => {
@@ -100,6 +122,29 @@ const getAverageScoresByCourseAndUser = async (course_id) => {
         }
       });
     });
+
+    // Recorrer los resultados agrupados y verificar si existe un resultado de prequizz para cada usuario
+    Object.keys(groupedResults).forEach(user_id => {
+      const prequizzResult = prequizzResults.find(result => result.user_id.toString() === user_id);
+      if (!prequizzResult) {
+        // Si no hay resultado de prequizz, agregar uno con puntaje y efectividad de 0 y status "No completado"
+        groupedResults[user_id].prequizzResults.push({
+          course_id,
+          puntaje: 0,
+          efectividad: 0,
+          status: 'No completado'
+        });
+      } else {
+        // Si hay resultado de prequizz, agregarlo al usuario
+        groupedResults[user_id].prequizzResults.push({
+          course_id: prequizzResult.course_id,
+          puntaje: prequizzResult.puntaje,
+          efectividad: prequizzResult.efectividad,
+          status: 'Completado'
+        });
+      }
+    });
+
 
     // Calculate average_score for each user
     Object.keys(groupedResults).forEach(user_id => {
@@ -123,10 +168,13 @@ const getAverageScoresByCourseAndUser = async (course_id) => {
     const sortedResults = Object.values(groupedResults).sort((a, b) => b.average_score - a.average_score);
 
     return sortedResults;
+    
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
+
+
 
 module.exports = { getAverageScoresByCourseAndUser};
