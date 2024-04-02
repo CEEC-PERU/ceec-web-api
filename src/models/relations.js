@@ -3,7 +3,7 @@ const Quizz = require('./quizzModel')
 const QuizzType = require('./quizzTypeModel')
 const Course = require('./courseModel');
 const Module = require('./moduleModel');
-
+const Requirement = require('./requirementModel');
 const User = require('./userModel');
 const AppSession = require('./appSessionModel');
 const Profile = require('./profileModel');
@@ -17,6 +17,7 @@ const State = require('./StateModel');
 const DictionaryQuiz = require('./dictionaryModel');
 const CampaignUser = require('./campaignUser');
 const Client = require('./ClientModel');
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,13 +72,15 @@ User.belongsTo(Client, {
   });
   
 
-//////////////////////////////////////////////////////////
+// Un usuario puede tener varios requerimientos
+User.hasMany(Requirement, { foreignKey: 'user_id' });
 
+
+//////////////////////////////////////////////////////////
 Client.hasMany(User, {
     foreignKey: 'client_id',
     as: 'users',
 });
-
 //////////////////////////////////////////////////////////////////
 
 Profile.belongsTo(User, {
@@ -256,6 +259,14 @@ AppSession.belongsTo(User, {
 // Un usuario se le asigna una campaña (relación a través de CampaignUser)
 Campaign.belongsToMany(User, { through: CampaignUser, foreignKey: 'campaign_id' });
 
+
+Campaign.hasMany(Requirement, { foreignKey: 'campaign_id' });
+
+/////////////////////////////////////////////////////////////////////////////////
+
+// Los requerimientos pueden tener varios usuarios
+Requirement.belongsTo(User, { foreignKey: 'user_id' });
+Requirement.belongsTo(Campaign, { foreignKey: 'campaign_id' });
 
 //////////////////////////////////////////////////////////////////////////
 
