@@ -9,6 +9,8 @@ exports.getAllEvaluations = async () => {
   }
 };
 
+
+
 exports.getEvaluationById = async (evaluationId) => {
   try {
     return await Evaluation.findByPk(evaluationId);

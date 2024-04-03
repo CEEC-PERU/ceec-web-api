@@ -10,19 +10,19 @@ const authenticateToken = require('../../middlewares/authenticationMiddleware');
 
 
 //obtener por course_id  y client_id lista de evaluaciones y prequizz?
-router.get('/:course_id/:client_id',authenticateToken, rankingController.getAverageScores);
+router.get('/:course_id/:client_id', rankingController.getAverageScores);
 
 //antes
 router.get('/eva/:campaign_id',authenticateToken, rankingCampEvaController.getAverageScores);
 
 //obtener por filtro de campaña y cliente_id todos las evaluaciones y prequizz de cada usuario con su respectivo curso. , despues
-router.get('/eva/pre/:campaign_id/:client_id',authenticateToken, rankingCampEvaController.getAverageEvaPrequizz);
+router.get('/eva/pre/:campaign_id/:client_id', rankingCampEvaController.getAverageEvaPrequizz);
 
 //obtener todas las campañas por client_id , no hbailitado
 router.get('/campaign/:client_id/:campaign_id',authenticateToken, rankingCampEvaController.getAllDataCampaign);
 
 
 //obtener todas las campañas por client_id 
-router.get('/excel/:course_id',rankingController.generateExcel);
+router.get('/excel/:course_id/:client_id',rankingController.generateExcel);
 
 module.exports = router;
