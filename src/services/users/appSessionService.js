@@ -54,6 +54,49 @@ const getSessionStatistics = async ({ startDate, endDate }) => {
 };
 
 
+// Definición de la función getSessionStatisticsbyUser
+// Esta función es asincrónica, lo que significa que devuelve una promesa
+const getSessionStatisticsByUser = async ({ startDate, endDate, userId }) => {
+    try {
+        const sessions = await AppSession.findAll({
+            attributes: [
+                [
+                    AppSession.sequelize.fn(
+                        'date_trunc',
+                        'day',
+                        AppSession.sequelize.col('start_time')
+                    ),
+                    'session_day'
+                ],
+                [AppSession.sequelize.fn('COUNT', AppSession.sequelize.col('appsession_id')), 'sessions'],
+                [
+                    AppSession.sequelize.fn(
+                        'AVG',
+                        AppSession.sequelize.literal(
+                            'EXTRACT(EPOCH FROM ("end_time" - "start_time"))'
+                        )
+                    ),
+                    'average_duration_seconds'
+                ],
+            ],
+            group: ['session_day'],
+            where: {
+                start_time: {
+                    [Op.between]: [startDate, endDate],
+                },
+                user_id: userId, // Filtrar por userId
+            },
+            order: [[AppSession.sequelize.literal('session_day'), 'DESC']],
+            raw: true,
+        });
+        return sessions;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+
 const findUsersWithoutSessions = async () => {
     try {
         const usersWithoutSessions = await User.findAll({
@@ -86,4 +129,4 @@ const findLastLoginDate = async (userId) => {
         throw error;
     }
 };
-module.exports = { createAppSessionService, getSessionStatistics, findLastLoginDate, findUsersWithoutSessions };
+module.exports = { createAppSessionService, getSessionStatisticsByUser , getSessionStatistics, findLastLoginDate, findUsersWithoutSessions };

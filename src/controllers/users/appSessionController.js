@@ -1,4 +1,4 @@
-const { createAppSessionService, getSessionStatistics  , getInactiveUsers , getLastLogin , getUsersActivityCount} = require("../../services/users/appSessionService");
+const { createAppSessionService, getSessionStatistics  , getInactiveUsers , getLastLogin , getUsersActivityCount, getSessionStatisticsByUser} = require("../../services/users/appSessionService");
 const { parseISO, startOfWeek, subWeeks, endOfWeek } = require('date-fns');
 
 const appSessionController = async (req, res) => {
@@ -66,6 +66,53 @@ const getAppSessions = async (req, res) => {
         console.error(error);
         res.status(500).json(error);
     }
+
+}
+
+// Definición de la función getAppSessionsByUserId
+// Esta función es asincrónica, lo que significa que devuelve una promesa
+// En el controlador
+const getAppSessionsByUser = async (req, res) => {
+    try {
+        const { page = 0 } = req.query;
+        const { userId } = req.params; // Obtener userId de los parámetros de la ruta
+        const currentPage = parseInt(page);
+        const currentDate = new Date();
+        const startDate = startOfWeek(currentDate);
+        const startDatePage = subWeeks(startDate, currentPage);
+        const endDatePage = endOfWeek(startDatePage);
+        const appSessions = await getSessionStatisticsByUser({
+            startDate: startDatePage,
+            endDate: endDatePage,
+            userId, // Pasar userId al servicio
+        });
+        const sessionsWithDay = appSessions.map(session => {
+            const sessionDate = new Date(session.session_day);
+            sessionDate.setDate(sessionDate.getDate() + 1);
+
+            return {
+                
+                ...session,
+                day: sessionDate
+                    .toLocaleDateString('es-ES', { weekday: 'long' }).charAt(0).toUpperCase() +
+                    sessionDate
+                        .toLocaleDateString('es-ES', { weekday: 'long' }).slice(1),
+            };
+        });
+
+        const startOfWeekDate = startDatePage.toLocaleDateString('es-ES');
+        const endOfWeekDate = endDatePage.toLocaleDateString('es-ES');
+
+        const result = {
+            sessionsWithDay,
+            startOfWeek: startOfWeekDate,
+            endOfWeek: endOfWeekDate,
+        };
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
 }
 const getInactiveUsersController = async (req, res) => {
     try {
@@ -99,4 +146,4 @@ const getUsersActivityCountController = async (req, res) => {
     }
 }
 
-module.exports = { appSessionController, getAppSessions, getInactiveUsersController, getLastLoginController, getUsersActivityCountController };
+module.exports = { appSessionController, getAppSessionsByUser ,getAppSessions, getInactiveUsersController, getLastLoginController, getUsersActivityCountController };
