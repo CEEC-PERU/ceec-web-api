@@ -31,6 +31,7 @@ exports.authService = async function({ email, password }) {
                 id: userFound.user_id,
                 role: userFound.role_id,
                 email: userFound.email,
+                client_id: userFound.client_id,
                 loginTime: new Date()
             },
             JWT_SECRET,
