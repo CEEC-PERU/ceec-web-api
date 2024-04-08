@@ -4,6 +4,7 @@ const appSessionController = require('../../controllers/users/appSessionControll
 const authenticateToken = require('../../middlewares/authenticationMiddleware');
 
 router.get('/', authenticateToken, appSessionController.getAppSessions);
+router.get('/usemonth', authenticateToken, appSessionController.getAppSessions2);
 router.get('/user/:userId', authenticateToken, appSessionController.getAppSessionsByUser);
 router.get('/inactive', authenticateToken, appSessionController.getInactiveUsersController);
 router.get('/last-login/:userId', authenticateToken, appSessionController.getLastLoginController);

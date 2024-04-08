@@ -1,6 +1,6 @@
 // rankingController.js
 const rankingService = require('../../services/courses/rankingService');
-const rankingService = require('../../services/campaign/RankinCampaignService');
+const rankingService2 = require('../../services/campaign/RankinCampaignService');
 const excel = require('exceljs');
 const getAverageScores = async (req, res) => {
   const { course_id , client_id} = req.params;
@@ -52,7 +52,7 @@ const generateExcel = async (req, res, next) => {
 const generateExcelCampaign = async (req, res, next) => {
   try {
     const { campaign_id, client_id } = req.params;
-    const results = await rankingService.getAverageScoresByCourseAndUser(course_id, client_id);
+    const results = await rankingService2.getAverageScoresByCampaignQuiz(campaign_id, client_id);
 
     const workbook = new excel.Workbook();
     const worksheet = workbook.addWorksheet('Resultados');

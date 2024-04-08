@@ -17,6 +17,10 @@ exports.getAllCampaigns = async () => {
   }
 };
 
+
+
+
+
 exports.getCampaignById = async (campaignId) => {
   try {
     return await Campaign.findByPk(campaignId);

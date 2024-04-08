@@ -1,7 +1,10 @@
 const AppSession = require("../../models/appSessionModel")
 const User = require('../../models/userModel');
+const Profile = require('../../models/userModel');
+const { Op } = require('sequelize'); 
+const { sequelize } = require('../../config/database');
+const { startOfWeek, endOfWeek, startOfMonth, endOfMonth ,  subWeeks} = require('date-fns');
 
-const { Op } = require('sequelize');
 
 const createAppSessionService = async (appSession) => {
     try {
@@ -52,6 +55,49 @@ const getSessionStatistics = async ({ startDate, endDate }) => {
         throw error;
     }
 };
+     
+
+const getSessionStatistics2 = async ({ startDate, endDate }) => {
+    try {
+        const sessions = await AppSession.findAll({
+            attributes: [
+                'user_id', // Agregar el campo user_id para agrupar por usuario
+                [
+                    AppSession.sequelize.fn(
+                        'date_trunc',
+                        'day',
+                        AppSession.sequelize.col('start_time')
+                    ),
+                    'session_day'
+                ],
+                [AppSession.sequelize.fn('COUNT', AppSession.sequelize.col('appsession_id')), 'sessions'],
+                [
+                    AppSession.sequelize.fn(
+                        'AVG',
+                        AppSession.sequelize.literal(
+                            'EXTRACT(EPOCH FROM ("end_time" - "start_time"))'
+                        )
+                    ),
+                    'average_duration_seconds'
+                ],
+            ],
+            group: ['user_id', 'session_day'], // Agrupar por user_id y session_day
+            where: {
+                start_time: {
+                    [Op.between]: [startDate, endDate],
+                },
+            },
+            order: [['user_id', 'ASC'], [AppSession.sequelize.literal('session_day'), 'DESC']],
+            raw: true,
+        });
+        return sessions;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+
 
 
 // Definición de la función getSessionStatisticsbyUser
@@ -129,4 +175,4 @@ const findLastLoginDate = async (userId) => {
         throw error;
     }
 };
-module.exports = { createAppSessionService, getSessionStatisticsByUser , getSessionStatistics, findLastLoginDate, findUsersWithoutSessions };
+module.exports = { createAppSessionService, getSessionStatistics2 ,getSessionStatisticsByUser , getSessionStatistics, findLastLoginDate, findUsersWithoutSessions };

@@ -1,6 +1,7 @@
-const { createAppSessionService, getSessionStatistics  , getInactiveUsers , getLastLogin , getUsersActivityCount, getSessionStatisticsByUser} = require("../../services/users/appSessionService");
-const { parseISO, startOfWeek, subWeeks, endOfWeek } = require('date-fns');
-
+const {getSessionStatistics2,  createAppSessionService, getSessionStatistics  , getInactiveUsers , getLastLogin , getUsersActivityCount, getSessionStatisticsByUser} = require("../../services/users/appSessionService");
+const { startOfWeek, subWeeks, endOfWeek, startOfMonth, endOfMonth , parseISO} = require('date-fns');
+const Profile = require('../../models/userModel');
+const User = require('./../../models/userModel');
 const appSessionController = async (req, res) => {
     try {
         const {
@@ -68,6 +69,79 @@ const getAppSessions = async (req, res) => {
     }
 
 }
+
+const getAppSessions2 = async (req, res) => {
+    try {
+        const { page = 0 } = req.query;
+        const currentPage = parseInt(page);
+        const currentDate = new Date();
+        const { clientId} = req.params;
+        const startDate = startOfMonth(currentDate);
+        const startDatePage = subWeeks(startDate, currentPage);
+        const endDatePage = endOfMonth(startDatePage);
+        const appSessions = await getSessionStatistics2({
+            startDate: startDatePage,
+            endDate: endDatePage,
+         
+        });
+
+        // Agrupar estadísticas por usuario y mes
+        const groupedSessions = {};
+        appSessions.forEach(session => {
+            const sessionDate = new Date(session.session_day);
+            const monthYear = sessionDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            if (!groupedSessions[session.user_id]) {
+                groupedSessions[session.user_id] = {};
+            }
+            if (!groupedSessions[session.user_id][monthYear]) {
+                groupedSessions[session.user_id][monthYear] = {
+                    sessions: 0,
+                    total_duration_seconds: 0,
+                };
+            }
+            groupedSessions[session.user_id][monthYear].sessions += parseInt(session.sessions);
+            groupedSessions[session.user_id][monthYear].total_duration_seconds += parseFloat(session.average_duration_seconds);
+        });
+
+        // Formatear resultados según lo requerido
+        const formattedResults = [];
+        for (const userId in groupedSessions) {
+            //agregar a el profiles en esta conslta
+            const user = await User.findByPk(userId ); /*, {
+                include: [
+                    {
+                   
+                          model: Profile,
+                          attributes: ['first_name', 'last_name', 'profile_picture']
+                       
+                    },
+                  ],
+            });*/
+           // const Profile = await User.findByPk(user); // Obtener información del usuario
+            const userSessions = groupedSessions[userId];
+            const sessionsWithMonths = Object.keys(userSessions).map(monthYear => ({
+                monthYear,
+                sessions: userSessions[monthYear].sessions,
+                total_duration_seconds: userSessions[monthYear].total_duration_seconds.toFixed(2), // Redondear a 2 decimales
+            }));
+            formattedResults.push({
+                email: user.email,
+                client_id : user.client_id,
+               // fullname: Profile.first_name + ' ' + Profile.last_name,
+               // picture : Profile.profile_picture,
+                user_id: userId,
+                sessionsWithMonths,
+                startOfMonth: startDatePage.toLocaleDateString('es-ES'),
+                endOfMonth: endDatePage.toLocaleDateString('es-ES'),
+            });
+        }
+
+        res.status(200).json(formattedResults);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+};
 
 // Definición de la función getAppSessionsByUserId
 // Esta función es asincrónica, lo que significa que devuelve una promesa
@@ -146,4 +220,4 @@ const getUsersActivityCountController = async (req, res) => {
     }
 }
 
-module.exports = { appSessionController, getAppSessionsByUser ,getAppSessions, getInactiveUsersController, getLastLoginController, getUsersActivityCountController };
+module.exports = { appSessionController, getAppSessions2 ,getAppSessionsByUser ,getAppSessions, getInactiveUsersController, getLastLoginController, getUsersActivityCountController };
