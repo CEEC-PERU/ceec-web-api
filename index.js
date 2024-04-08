@@ -35,7 +35,6 @@ app.use('/api/custom', require('./src/routes/courses/customAdminRoutes'));
 app.use('/api/appsession', require('./src/routes/users/appSessionRoutes'))
 app.use('/api/usersesion', require('./src/routes/users/userSesionRoutes'))
 app.use('/api/users', require('./src/routes/users/userRoutes'))
-
 app.use('/api/dictionaryquizz', require('./src/routes/courses/dictionaryQuizzRoutes'));
 app.use('/api/prequizzresults', require ('./src/routes/courses/prequizzResultRoutes'))
 app.use('/api/evaluation', require('./src/routes/courses/customEvaluationRoutes'));

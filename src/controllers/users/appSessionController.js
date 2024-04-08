@@ -1,6 +1,6 @@
 const {getSessionStatistics2,  createAppSessionService, getSessionStatistics  , getInactiveUsers , getLastLogin , getUsersActivityCount, getSessionStatisticsByUser} = require("../../services/users/appSessionService");
 const { startOfWeek, subWeeks, endOfWeek, startOfMonth, endOfMonth , parseISO} = require('date-fns');
-const Profile = require('../../models/userModel');
+const Profile = require('../../models/profileModel');
 const User = require('./../../models/userModel');
 const appSessionController = async (req, res) => {
     try {
@@ -45,7 +45,6 @@ const getAppSessions = async (req, res) => {
             sessionDate.setDate(sessionDate.getDate() + 1);
 
             return {
-                
                 ...session,
                 day: sessionDate
                     .toLocaleDateString('es-ES', { weekday: 'long' }).charAt(0).toUpperCase() +
@@ -69,21 +68,21 @@ const getAppSessions = async (req, res) => {
     }
 
 }
-
 const getAppSessions2 = async (req, res) => {
     try {
         const { page = 0 } = req.query;
         const currentPage = parseInt(page);
         const currentDate = new Date();
-        const { clientId} = req.params;
+        const { clientId } = req.params;
+        console.log(clientId);
         const startDate = startOfMonth(currentDate);
         const startDatePage = subWeeks(startDate, currentPage);
         const endDatePage = endOfMonth(startDatePage);
         const appSessions = await getSessionStatistics2({
             startDate: startDatePage,
             endDate: endDatePage,
-         
-        });
+            clientId
+         });
 
         // Agrupar estadísticas por usuario y mes
         const groupedSessions = {};
@@ -96,47 +95,66 @@ const getAppSessions2 = async (req, res) => {
             if (!groupedSessions[session.user_id][monthYear]) {
                 groupedSessions[session.user_id][monthYear] = {
                     sessions: 0,
-                    total_duration_seconds: 0,
+                    total_duration_minutes: 0, // Cambiar a total_duration_minutes
                 };
             }
             groupedSessions[session.user_id][monthYear].sessions += parseInt(session.sessions);
-            groupedSessions[session.user_id][monthYear].total_duration_seconds += parseFloat(session.average_duration_seconds);
+            groupedSessions[session.user_id][monthYear].total_duration_minutes += parseFloat(session.average_duration_minutes); // Cambiar a average_duration_minutes
         });
 
         // Formatear resultados según lo requerido
         const formattedResults = [];
+       
         for (const userId in groupedSessions) {
-            //agregar a el profiles en esta conslta
-            const user = await User.findByPk(userId ); /*, {
-                include: [
-                    {
-                   
-                          model: Profile,
-                          attributes: ['first_name', 'last_name', 'profile_picture']
-                       
-                    },
-                  ],
-            });*/
-           // const Profile = await User.findByPk(user); // Obtener información del usuario
+  
+
+           const user = await User.findByPk(userId, {
+           
+    include: [
+        {
+            model: Profile,
+            attributes: ['first_name', 'last_name', 'profile_picture'],
+        },
+    ],
+});
+
+
+
+// Puedes utilizar usersFilteredByClientId como lo necesites
+
+            // Definir valores predeterminados para el nombre completo y la imagen del perfil
+            let fullname = "Usuario(No actualiza perfil)";
+            let picture = "https://res.cloudinary.com/dk2red18f/image/upload/v1711492901/CEEC/PERFIL/wno2ylcbiz3zvlrtnl6a.jpg";
+
+            // Verificar si el perfil del usuario existe
+            if (user && user.Profile) {
+                fullname = user.Profile.first_name + ' ' + user.Profile.last_name;
+                picture = user.Profile.profile_picture;
+            }
+
             const userSessions = groupedSessions[userId];
             const sessionsWithMonths = Object.keys(userSessions).map(monthYear => ({
                 monthYear,
                 sessions: userSessions[monthYear].sessions,
-                total_duration_seconds: userSessions[monthYear].total_duration_seconds.toFixed(2), // Redondear a 2 decimales
+                total_duration_minutes: userSessions[monthYear].total_duration_minutes.toFixed(2), // Redondear a 2 decimales
             }));
             formattedResults.push({
                 email: user.email,
-                client_id : user.client_id,
-               // fullname: Profile.first_name + ' ' + Profile.last_name,
-               // picture : Profile.profile_picture,
+                client_id: user.client_id,
+                fullname: fullname,
+                picture: picture,
                 user_id: userId,
                 sessionsWithMonths,
                 startOfMonth: startDatePage.toLocaleDateString('es-ES'),
                 endOfMonth: endDatePage.toLocaleDateString('es-ES'),
             });
-        }
+        formattedResults.sort((a, b) => b.sessionsWithMonths[0].total_duration_minutes - a.sessionsWithMonths[0].total_duration_minutes);
 
-        res.status(200).json(formattedResults);
+       
+              
+            }
+ res.status(200).json(formattedResults);
+            
     } catch (error) {
         console.error(error);
         res.status(500).json(error);
