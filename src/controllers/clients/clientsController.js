@@ -1,5 +1,4 @@
 const clientService = require('../../services/clients/clientsService');
-
 const clientController = {
   create: async (req, res) => {
     const client = await clientService.create(req.body);

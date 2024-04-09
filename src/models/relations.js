@@ -17,7 +17,7 @@ const State = require('./StateModel');
 const DictionaryQuiz = require('./dictionaryModel');
 const CampaignUser = require('./campaignUser');
 const Client = require('./ClientModel');
-
+const Notification =  require('./notificationsModel');
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,11 +31,21 @@ const Client = require('./ClientModel');
 State.hasMany(CampaignUser, {
     foreignKey: 'id_state',
 });
+//////////////////////////////////////////////////////////////////////////////
+
+Notification.hasMany(User, {
+    foreignKey: 'user_id',
+});
+
 
 
 /////////////////////////////////////////////////////////////////////////////
 //un usuario tiene un perfil
 User.hasOne(Profile, {
+    foreignKey: 'user_id',
+});
+
+User.belongsTo(Notification, {
     foreignKey: 'user_id',
 });
 

@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const secretKey = 'MYSECRETTOKENJWT'; // Cambia por una clave secreta segura
 
-
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
 
