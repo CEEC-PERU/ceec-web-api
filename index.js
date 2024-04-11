@@ -55,7 +55,7 @@ app.use('/api/prequizz', require('./src/routes/courses/prequizzRoutes'));
 app.use('/api/dictionary', require('./src/routes/courses/dictionaryRoutes'));
 app.use('/api/clients', require('./src/routes/clients/clientsRoutes'));
 app.use('/api/auth', require('./src/routes/auth/auth-route'));
-app.use('/api/notificactions', require('./src/routes/notificacions/notificactionsRoutes'));
+app.use('/api/notifications', require('./src/routes/notificacions/notificactionsRoutes'));
 SocketService(server);
 
 server.listen(PORT, () => {

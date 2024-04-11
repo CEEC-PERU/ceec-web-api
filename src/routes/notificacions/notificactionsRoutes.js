@@ -4,11 +4,11 @@ const authenticateToken = require('../../middlewares/authenticationMiddleware');
 const notificationController = require('../../controllers/notifications/notificationController');
 
 
-router.post('/', notificationController.create);
-router.get('/', notificationController.getAll);
-router.get('/:id', notificationController.getById);
-router.put('/:id', notificationController.update);
-router.delete('/:id', notificationController.delete);
+router.post('/',authenticateToken, notificationController.create);
+router.get('/', authenticateToken,notificationController.getAll);
+router.get('/:id',authenticateToken, notificationController.getById);
+router.put('/:id',authenticateToken, notificationController.update);
+router.delete('/:id',authenticateToken, notificationController.delete);
 
 module.exports = router;
 

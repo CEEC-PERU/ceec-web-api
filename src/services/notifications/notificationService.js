@@ -1,5 +1,7 @@
 const Notification = require('../../models/notificationsModel');
 const sequelize = require('sequelize');
+const User = require('../../models/usersModel');
+
 const NotificationService = {
   create: async (data) => {
     return await Notification.create(data);
@@ -18,7 +20,9 @@ const NotificationService = {
 
   delete: async (id) => {
     return await Notification.destroy({ where: {notification_id : id } });
-  }
+  },
+
+  
 };
 
 module.exports = NotificationService;
