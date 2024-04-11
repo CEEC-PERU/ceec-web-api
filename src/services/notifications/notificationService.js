@@ -1,6 +1,6 @@
 const Notification = require('../../models/notificationsModel');
 const sequelize = require('sequelize');
-const User = require('../../models/usersModel');
+const User = require('../../models/userModel');
 
 const NotificationService = {
   create: async (data) => {
