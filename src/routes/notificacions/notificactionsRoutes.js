@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authenticateToken = require('../../middlewares/authenticationMiddleware');
 const notificationController = require('../../controllers/notifications/notificationController');
-
-
+const notificationController2 = require('../../controllers/notifications/sendNotification');
+router.post('/send-notification', notificationController2.sendNotification);
 router.post('/',authenticateToken, notificationController.create);
 router.get('/', authenticateToken,notificationController.getAll);
 router.get('/:id',authenticateToken, notificationController.getById);
@@ -11,6 +11,7 @@ router.put('/:id',authenticateToken, notificationController.update);
 router.delete('/:id',authenticateToken, notificationController.delete);
 
 module.exports = router;
+
 
 
 
