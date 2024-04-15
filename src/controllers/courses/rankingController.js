@@ -12,6 +12,16 @@ const getAverageScores = async (req, res) => {
   }
 };
 
+
+const getAverageCoursebyStudent = async (req, res) => {
+    const { course_id, user_id } = req.params;
+    try {
+      const averageScores = await rankingService.getAverageCoursebyStudent(course_id , user_id);
+      res.json(averageScores);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+};
 const generateExcel = async (req, res, next) => {
   try {
     const { course_id, client_id } = req.params;
@@ -89,5 +99,5 @@ const generateExcelCampaign = async (req, res, next) => {
 
 
 
-module.exports = { getAverageScores, generateExcel };
+module.exports = { getAverageScores, generateExcel , getAverageCoursebyStudent};
 

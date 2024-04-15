@@ -12,6 +12,11 @@ const authenticateToken = require('../../middlewares/authenticationMiddleware');
 //obtener por course_id  y client_id lista de evaluaciones y prequizz?
 router.get('/:course_id/:client_id', rankingController.getAverageScores);
 
+
+//obtener por course_id  y user_id  lista de evaluaciones y prequizz por ususario
+router.get('/student/:course_id/:user_id', rankingController.getAverageCoursebyStudent);
+
+
 //antes
 router.get('/eva/:campaign_id',authenticateToken, rankingCampEvaController.getAverageScores);
 

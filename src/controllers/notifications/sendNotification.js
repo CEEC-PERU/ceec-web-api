@@ -1,7 +1,8 @@
 const Notification = require('../../models/notificationsModel');
 const { Expo } = require('expo-server-sdk');
 
-const expo = new Expo();
+
+const expo = new Expo({ accessToken: process.env.ACCESS_TOKEN });
 //el title y message definir en un archivo , definir a las 5:40 pm y 8 am se envie notificacion y en el index ejecutar solo la funcion, 
 //ya no sera por rutas
 const notificationController = {

@@ -173,6 +173,7 @@ const getAppSessionsByUser = async (req, res) => {
         const startDate = startOfWeek(currentDate);
         const startDatePage = subWeeks(startDate, currentPage);
         const endDatePage = endOfWeek(startDatePage);
+        
         const appSessions = await getSessionStatisticsByUser({
             startDate: startDatePage,
             endDate: endDatePage,
