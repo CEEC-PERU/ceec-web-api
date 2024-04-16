@@ -180,12 +180,9 @@ const getAverageScoresByCourseAndUser = async (course_id, client_id) => {
 //top usuarios
 const getAverageCoursebyStudent = async (course_id, user_id) => {
   try {
-
-
-
-    const course = await Course.findOne({
+const course = await Course.findOne({
       where: { course_id },
-      attributes: ['name']
+      attributes: ['course_id','name','image','logo','background_color' ]
     });
 
     // Obtener todas las evaluaciones del curso
