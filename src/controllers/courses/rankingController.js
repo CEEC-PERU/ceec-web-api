@@ -30,7 +30,6 @@ const generateExcel = async (req, res, next) => {
     const workbook = new excel.Workbook();
     const worksheet = workbook.addWorksheet('Resultados');
 
-    // Construir encabezados dinámicamente
     const headers = ['Curso', 'Email', 'Nombre y Apellidos'];
     results[0].evaluations.forEach((_, i) => {
       headers.push(`Módulo ${i+1}`, `Evaluación ${i+1}`, `Total Score ${i+1}`, `Realizó Examen ${i+1}`);
@@ -38,7 +37,6 @@ const generateExcel = async (req, res, next) => {
     headers.push('Suma Total ','Promedio', 'Estado', 'Prequizz Puntaje' ,'Prequizz Estado');
     worksheet.addRow(headers);
 
-    // Construir filas de datos dinámicamente
     results.forEach(result => {
       const fullName = result.User.Profile ? `${result.User.Profile.first_name} ${result.User.Profile.last_name}` : 'No Actualiza';
       const row = [result.Course.name, result.User.email, fullName];

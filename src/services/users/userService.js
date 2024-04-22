@@ -96,16 +96,17 @@ async function getAllUsers() {
       model: Role,
       attributes: ['description'],
     }],
-    attributes: ['email', 'role_id', 'user_id'],
+    attributes: ['email','client_id', 'role_id', 'user_id'],
 
   });
 }
 
-async function getStudentsQuantity() {
+async function getStudentsQuantity(client_id) {
   try {
     const studentQuantity = await User.count({
       where: {
         role_id: 1,
+        client_id:client_id
       }
     });
     return studentQuantity;
@@ -181,6 +182,9 @@ async function getByRoleIdAndClientId() {
     ],
   });
 }
+
+
+
 
 module.exports = {
   createUserAdmin,
