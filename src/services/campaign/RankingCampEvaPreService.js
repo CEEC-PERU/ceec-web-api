@@ -126,6 +126,17 @@ const prequizzResults = await PrequizzResult.findAll({
 });
 
 
+// Obtener los nombres de los cursos por courseId
+const courseNames = {};
+await Promise.all(
+  campaignCourses.map(async (course) => {
+    const courseDetails = await Course.findOne({
+      where: { course_id: course.course_id },
+      attributes: ['name'],
+    });
+    courseNames[course.course_id] = courseDetails ? courseDetails.name : '';
+  })
+);
     // Agrupar los resultados por usuario y curso
     const groupedResults = results.reduce((acc, result) => {
       const { user_id } = result;
@@ -139,8 +150,9 @@ const prequizzResults = await PrequizzResult.findAll({
       }
 
       if (courseId && !acc[user_id].Courses[courseId]) {
+       
         acc[user_id].Courses[courseId] = {
-          name: result.Evaluation?.Module?.Course?.name,
+          name:  courseNames[courseId], 
           evaluations: [],
           total_score_sum: 0,
           average_score: 0,

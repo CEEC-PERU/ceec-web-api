@@ -88,7 +88,7 @@ const getAppSessions2 = async (req, res) => {
         const groupedSessions = {};
         appSessions.forEach(session => {
             const sessionDate = new Date(session.session_day);
-            const monthYear = sessionDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            const monthYear = sessionDate.toLocaleDateString('en-ES', { month: 'long', year: 'numeric' });
             if (!groupedSessions[session.user_id]) {
                 groupedSessions[session.user_id] = {};
             }
@@ -123,7 +123,7 @@ const getAppSessions2 = async (req, res) => {
 // Puedes utilizar usersFilteredByClientId como lo necesites
 
             // Definir valores predeterminados para el nombre completo y la imagen del perfil
-            let fullname = "Usuario(No actualiza perfil)";
+            let fullname = "Perfil No actualizado";
             let picture = "https://res.cloudinary.com/dk2red18f/image/upload/v1711492901/CEEC/PERFIL/wno2ylcbiz3zvlrtnl6a.jpg";
 
             // Verificar si el perfil del usuario existe
@@ -179,6 +179,7 @@ const getAppSessionsByUser = async (req, res) => {
             endDate: endDatePage,
             userId, // Pasar userId al servicio
         });
+        
         const sessionsWithDay = appSessions.map(session => {
             const sessionDate = new Date(session.session_day);
             sessionDate.setDate(sessionDate.getDate() + 1);
