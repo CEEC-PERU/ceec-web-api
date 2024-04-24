@@ -63,7 +63,7 @@ const generateExcelCampaign = async (req, res, next) => {
     const results = await rankingService2.getAverageScoresByCampaignQuiz(campaign_id, client_id);
 
     const workbook = new excel.Workbook();
-    const worksheet = workbook.addWorksheet('Resultados');
+    const worksheet = workbook.addWorksheet('ResultadosCampaign');
 
     // Construir encabezados dinámicamente
     const headers = ['Curso', 'Email', 'Nombre y Apellidos'];
@@ -97,5 +97,5 @@ const generateExcelCampaign = async (req, res, next) => {
 
 
 
-module.exports = { getAverageScores, generateExcel , getAverageCoursebyStudent};
+module.exports = { getAverageScores, generateExcel , getAverageCoursebyStudent , generateExcelCampaign};
 

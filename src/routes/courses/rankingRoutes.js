@@ -23,11 +23,15 @@ router.get('/eva/:campaign_id',authenticateToken, rankingCampEvaController.getAv
 //obtener por filtro de campaña y cliente_id todos las evaluaciones y prequizz de cada usuario con su respectivo curso. , despues
 router.get('/eva/pre/:campaign_id/:client_id', rankingCampEvaController.getAverageEvaPrequizz);
 
-//obtener todas las campañas por client_id , no hbailitado
+//obtener todas las campañas por client_id , no habilitado
 router.get('/campaign/:client_id/:campaign_id',authenticateToken, rankingCampEvaController.getAllDataCampaign);
 
 
-//obtener todas las campañas por client_id 
+//obtener todas las campañas por client_id general excel
 router.get('/excel/:course_id/:client_id',rankingController.generateExcel);
+
+//obtener todas las campañas por client_id  
+router.get('/excel/campaign/:campaign_id/:client_id',rankingController.generateExcelCampaign);
+
 
 module.exports = router;
