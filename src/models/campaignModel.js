@@ -16,16 +16,11 @@ const Campaign = sequelize.define('Campaign', {
     type: DataTypes.TEXT,
     collate: 'pg_catalog."default"',
   },
-  is_finish: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
+ 
   limit_date: {
     type: DataTypes.DATEONLY,
   },
-  image: {
-    type: DataTypes.TEXT,
-  },
+ 
 }, {
   tableName: 'campaigns',
   timestamps: false,
