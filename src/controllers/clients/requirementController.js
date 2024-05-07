@@ -1,28 +1,62 @@
+const Requirement = require('../../models/requirementModel');
 
+const cloudinary = require('cloudinary').v2;
 // controllers/requirementController.js
 const requirementService = require('../../services/clients/requirementService');
 
+cloudinary.config({
+  cloud_name: 'dk2red18f',
+  api_key: '647789177635785',
+  api_secret: 'xa2vaybRQMfxna7Gd2oqrQg8eUg'
+});
 
 exports.createRequirement = async (req, res) => {
-    try {
-      const { files } = req; // Supondo que você está usando algum middleware para lidar com os uploads de arquivos
-      const [day, month, year] = req.body.fecha.split('-');
-      req.body.fecha = new Date(`20${year}-${month}-${day}`);
-      // Fazer upload de arquivos para o Cloudinary e obter URLs
-      const urls = await requirementService.uploadFilesAndSaveURLs(files);
-      console.log(req.body.fecha)
-      // Atualizar o corpo da solicitação com as URLs
-      req.body.material = urls;
-  
-      // Criar o requirement no banco de dados
-      const requirement = await requirementService.createRequirement(req.body);
-  
-      res.status(200).json(requirement);
-    } catch (error) {
-      console.error('Erro ao criar requirement:', error);
-      res.status(500).json({ message: 'Ocorreu um erro ao processar sua solicitação' });
+  try {
+    // Subir imágenes a Cloudinary y obtener URLs
+    const materialURLs = await requirementService.uploadImages(req.body.material);
+    // Crear el requerimiento en la base de datos con las URLs de material
+    const requirement = await Requirement.create({
+      fecha: req.body.fecha,
+      campaign_id: req.body.campaign_id,
+      user_id: req.body.user_id,
+      course_name: req.body.course_name,
+      n_modulos: req.body.n_modulos,
+      material: materialURLs
+    });
+    res.status(201).json(requirement);
+  } catch (error) {
+    console.error('Error al crear el requerimiento:', error);
+    res.status(500).json({ message: 'Ocurrió un error al procesar la solicitud' });
+  }
+};
+
+/*
+exports.createRequirement = async (req, res) => {
+  try {
+    const { files } = req;
+    const urls = [];
+
+    for (const file of files) {
+      const result = await cloudinary.uploader.upload(file.path);
+      urls.push(result.secure_url);
     }
-  };
+
+    // Crear el requirement en la base de datos con las URL de los archivos
+    const requirement = await Requirement.create({
+      fecha: req.body.fecha,
+      campaign_id: req.body.campaign_id,
+      user_id: req.body.user_id,
+      course_name: req.body.course_name,
+      n_modulos: req.body.n_modulos,
+      material: urls
+    });
+
+    res.status(201).json(requirement);
+  } catch (error) {
+    console.error('Error al crear el requirement:', error);
+    res.status(500).json({ message: 'Ocurrió un error al procesar tu solicitud' });
+  }
+};*/
 
 exports.getAllRequirements = async (req, res) => {
     try {

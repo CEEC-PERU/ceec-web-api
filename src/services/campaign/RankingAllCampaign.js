@@ -13,8 +13,7 @@ const { sequelize } = require('../../config/database');
 const Campaign = require('../../models/campaignModel');
 const Client = require('../../models/ClientModel');
 
-
-// Definición de la función asincrónica que obtiene los promedios de puntajes por usuario y curso
+//agrupar pos campañas es decir mostrar todas las campañas y dentro de ella a los usuarios con sus respectivos cursos.
 const getAllCampaignQuiz = async ( client_id ) => {
   try {
     // Obtener los IDs de usuario asociados con la campaña
@@ -326,7 +325,71 @@ return sortedResults;
   }
 };
 
-module.exports = { getAverageScoresByCampaignQuiz };
+
+const getAverageScoresByCourseAndUser = async (client_id) => {
+  try {
+    // Obtener todas las campañas para el cliente dado
+    const campaigns = await Campaign.findAll({
+      where: { client_id },
+      attributes: ['campaign_id', 'name'],
+    });
+
+    const groupedResults = {};
+    // Para cada campaña, obtener los resultados de los usuarios 
+    for (const campaign of campaigns) {
+      const course_id = campaign.course_id;
+     
+      // Obtener resultados de evaluación para el curso
+      const results = await EvaluationResult.findAll({
+        where: {
+          '$Evaluation.Module.course_id$': course_id, // Filtrar por ID del curso dentro de la evaluación
+        },
+        include: [
+          {
+            model: Evaluation,
+            attributes: ['evaluation_id', 'name'],
+            include: [
+              {
+                model: Module,
+                attributes: ['module_id', 'name'],
+                where: { course_id },
+              },
+            ],
+          },
+          {
+            model: User,
+            attributes: ['email', 'role_id', 'client_id'],
+            where: { client_id },
+            include: [
+              {
+                model: Profile,
+                attributes: ['first_name', 'last_name', 'profile_picture'],
+              },
+            ],
+          },
+        ],
+        attributes: ['user_id', 'evaluation_id', 'total_score'],
+        order: ['user_id'],
+      });
+
+    
+
+    }
+
+    // Devolver resultados agrupados por campañas
+    
+    return groupedResults;
+
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+
+
+
+module.exports = { getAverageScoresByCampaignQuiz ,  };
 
 
 

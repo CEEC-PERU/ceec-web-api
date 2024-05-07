@@ -3,9 +3,27 @@ const Profile = require('../../models/profileModel');
 const Requirement = require('../../models/requirementModel');
 const User = require('../../models/userModel');
 const Campaign = require('../../models/campaignModel');
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary');
 
-// services/requirementService.js
+cloudinary.v2.config({
+  cloud_name: 'dk2red18f',
+  api_key: '647789177635785',
+  api_secret: 'xa2vaybRQMfxna7Gd2oqrQg8eUg',
+  secure: true,
+});
+
+exports.uploadImages = async (images) => {
+  try {
+    const urls = [];
+    for (const image of images) {
+      const result = await cloudinary.uploader.upload(image);
+      urls.push(result.secure_url);
+    }
+    return urls;
+  } catch (error) {
+    throw error;
+  }
+};
 
 exports.uploadFilesAndSaveURLs = async (files) => {
   try {
@@ -19,6 +37,9 @@ exports.uploadFilesAndSaveURLs = async (files) => {
     throw error;
   }
 };
+
+
+
 
 // Função para criar um novo requirement no banco de dados
 exports.createRequirement = async (data) => {
