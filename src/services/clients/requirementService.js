@@ -12,9 +12,15 @@ cloudinary.v2.config({
   secure: true,
 });
 
+
+
 exports.uploadImages = async (images) => {
   try {
     const urls = [];
+    if (!Array.isArray(images)) {
+      // Si `images` no es un array, se asume que solo hay una imagen y se convierte en un array
+      images = [images];
+    }
     for (const image of images) {
       const result = await cloudinary.uploader.upload(image);
       urls.push(result.secure_url);
@@ -24,21 +30,6 @@ exports.uploadImages = async (images) => {
     throw error;
   }
 };
-
-exports.uploadFilesAndSaveURLs = async (files) => {
-  try {
-    const urls = [];
-    for (const file of files) {
-      const result = await cloudinary.uploader.upload(file.path); // Faz o upload do arquivo para o Cloudinary
-      urls.push(result.secure_url); // Adiciona a URL do arquivo ao array de URLs
-    }
-    return urls;
-  } catch (error) {
-    throw error;
-  }
-};
-
-
 
 
 // Função para criar um novo requirement no banco de dados
@@ -50,8 +41,6 @@ exports.createRequirement = async (data) => {
     throw error;
   }
 };
-
-
 
 exports.getAllRequirements = async () => {
     try {

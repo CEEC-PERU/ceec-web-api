@@ -22,5 +22,4 @@ router.get('/excel/:course_id/:client_id',rankingController.generateExcel);
 //obtener todas las campañas por client_id  
 router.get('/excel/campaign/:campaign_id/:client_id',rankingController.generateExcelCampaign);
 
-
 module.exports = router;
