@@ -1,6 +1,7 @@
 // rankingController.js
 const rankingService = require('../../services/courses/rankingService');
 const rankingService2 = require('../../services/campaign/RankingCampaignServicev2');
+const rankingServiceData = require('../../services/campaign/RankingClientService.js');
 const excel = require('exceljs');
 const getAverageScores = async (req, res) => {
   const { course_id , client_id} = req.params;
@@ -114,5 +115,67 @@ const generateExcelCampaign = async (req, res, next) => {
 };
 
 
-module.exports = { getAverageScores, generateExcel , getAverageCoursebyStudent , generateExcelCampaign};
+const generateExcelDataGeneral = async (req, res, next) => {
+  try {
+    const { client_id } = req.params;
+    const results = await rankingServiceData.getAverageScoresByClient( client_id);
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron resultados para la campaña especificada' });
+    }
+
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet('ResultadosCampaign');
+
+    // Construir encabezados dinámicamente
+    const headers = ['Campaña', 'Curso', 'Email', 'Nombre y Apellidos'];
+    const maxEvaluations = Math.max(...results.flatMap(result => 
+      result.Campaigns.flatMap(campaign => 
+        campaign.Courses.map(course => course.evaluations.length)
+      )
+    ));
+    for (let i = 1; i <= maxEvaluations; i++) {
+      headers.push(`Módulo ${i}`, `Evaluación ${i}`, `Total Score ${i}`, `Realizó Examen ${i}`);
+    }
+    headers.push('Suma Total', 'Promedio', 'Estado', 'Prequizz Puntaje', 'Prequizz Estado');
+    worksheet.addRow(headers);
+
+    // Construir filas de datos dinámicamente
+    results.forEach(result => {
+      const email = result.User.email;
+      const fullName = result.User.Profile ? `${result.User.Profile.first_name} ${result.User.Profile.last_name}` : 'No Actualiza';
+      result.Campaigns.forEach(campaign => {
+        const campaignName = campaign.campaign_name;
+        campaign.Courses.forEach(course => {
+          const row = [campaignName, course.name || 'N/A', email, fullName];
+          course.evaluations.forEach(evaluation => {
+            row.push(evaluation.Evaluation.Module.name, evaluation.Evaluation.name, evaluation.total_score, evaluation.realize_exam ? 'SI' : 'NO');
+          });
+          // Rellenar celdas vacías si hay menos evaluaciones que el máximo
+          while (row.length < headers.length - 5) {
+            row.push('');
+          }
+          row.push(
+            course.total_score_sum,
+            course.average_score,
+            course.status,
+            course.prequizzResults.length > 0 ? course.prequizzResults[0].puntaje : 'N/A',
+            course.prequizzResults.length > 0 ? course.prequizzResults[0].status : 'N/A'
+          );
+          worksheet.addRow(row);
+        });
+      });
+    });
+
+    const excelBuffer = await workbook.xlsx.writeBuffer();
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=results.xlsx');
+    res.send(excelBuffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al generar el archivo Excel' });
+  }
+};
+
+module.exports = { getAverageScores, generateExcel , getAverageCoursebyStudent , generateExcelCampaign , generateExcelDataGeneral};
 

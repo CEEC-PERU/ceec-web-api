@@ -215,7 +215,7 @@ const getAverageScoresByCampaignQuiz = async (campaign_id, client_id) => {
         });
       });
     });
-
+   // AGREGAR PARA PODER MOSTRAR DE IGUAL MANERA TODAS LAS EVALUACIONES, EJEMPLO
     campaignCourses.forEach(campaignCourse => {
       const courseId = campaignCourse.course_id;
       const userIds = Object.keys(groupedResults);
