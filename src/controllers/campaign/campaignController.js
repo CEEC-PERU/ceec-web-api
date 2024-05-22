@@ -9,6 +9,34 @@ exports.getAllCampaigns = async (req, res) => {
   }
 };
 
+exports.getAllCampaignsByClientId = async (req, res) => {
+  try {
+    const campaigns = await CampaignService.getAllCampaignsByClientId(req.params.client_id, req.params.user_id);
+    res.json(campaigns);
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.getAllCourseCampaign = async (req, res) => {
+  try {
+    const campaigns = await CampaignService.getAllCourseCampaign(req.params.client_id, req.params.user_id);
+    res.json(campaigns);
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.getTotalCampaignUser = async (req, res) => {
+  try {
+    const campaigns = await CampaignService.getTotalCampaignUser(req.params.campaign_id);
+    res.json(campaigns);
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
 exports.getCampaignById = async (req, res) => {
   try {
     const campaign = await CampaignService.getCampaignById(req.params.id);

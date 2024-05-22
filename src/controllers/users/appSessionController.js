@@ -1,5 +1,5 @@
 const {getSessionStatistics2,  createAppSessionService, getSessionStatistics  , getInactiveUsers , getLastLogin , getUsersActivityCount, getSessionStatisticsByUser} = require("../../services/users/appSessionService");
-const { startOfWeek, subWeeks, endOfWeek, startOfMonth, endOfMonth , parseISO} = require('date-fns');
+const { startOfWeek, subWeeks, endOfWeek, startOfMonth, endOfMonth , parseISO, subMonths } = require('date-fns');
 const Profile = require('../../models/profileModel');
 const User = require('./../../models/userModel');
 const appSessionController = async (req, res) => {
@@ -76,7 +76,7 @@ const getAppSessions2 = async (req, res) => {
         const { clientId } = req.params;
         console.log(clientId);
         const startDate = startOfMonth(currentDate);
-        const startDatePage = subWeeks(startDate, currentPage);
+        const startDatePage = subMonths(startDate, currentPage);
         const endDatePage = endOfMonth(startDatePage);
         const appSessions = await getSessionStatistics2({
             startDate: startDatePage,
