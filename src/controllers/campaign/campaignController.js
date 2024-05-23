@@ -18,6 +18,8 @@ exports.getAllCampaignsByClientId = async (req, res) => {
   }
 };
 
+
+
 exports.getAllCourseCampaign = async (req, res) => {
   try {
     const campaigns = await CampaignService.getAllCourseCampaign(req.params.client_id, req.params.user_id);
@@ -29,13 +31,21 @@ exports.getAllCourseCampaign = async (req, res) => {
 
 exports.getTotalCampaignUser = async (req, res) => {
   try {
-    const campaigns = await CampaignService.getTotalCampaignUser(req.params.campaign_id);
+    const campaigns = await CampaignService.getTotalCampaignUser( req.params.client_id , req.params.user_id);
     res.json(campaigns);
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+exports.getUsersNotAsignado= async (req, res) => {
+  try {
+    const campaigns = await CampaignService.getUsersNotAsignado( req.params.client_id);
+    res.json(campaigns);
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
 
 exports.getCampaignById = async (req, res) => {
   try {

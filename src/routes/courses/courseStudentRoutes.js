@@ -6,6 +6,7 @@ const coursestudentController = require('../../controllers/courses/courseStudent
 router.post('/', coursestudentController.createCourseStudent);
 router.post('/many', coursestudentController.postCourseStudents)
 router.get('/', coursestudentController.getAllCourseStudents);
+
 router.get('/all-data/:course_id', coursestudentController.getAllCourseStudentsWithDetails);
 router.get('/:user_id', coursestudentController.getCourseStudentsByUserId);
 router.get('/course/:course_id', coursestudentController.getAllCourseStudentsByCourseId);

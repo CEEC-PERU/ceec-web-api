@@ -47,6 +47,16 @@ exports.getCampaignUser = async (id) => {
   }
 };
 
+exports.saveCampaignStudent = async (course_student) => {
+  try {
+    const courseStudent = await CampaignUser.create(course_student);
+    return courseStudent;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 exports.updateCampaignUser = async (id, campaignUser) => {
   try {
     return await CampaignUser.update(campaignUser, {

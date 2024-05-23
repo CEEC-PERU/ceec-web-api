@@ -7,7 +7,8 @@ const CampaignController = require('../../controllers/campaign/campaignControlle
 router.get('/', authenticateToken, CampaignController.getAllCampaigns);
 router.get('/client/user/:client_id/:user_id', authenticateToken, CampaignController.getAllCampaignsByClientId);
 router.get('/courses/:client_id/:user_id', authenticateToken, CampaignController.getAllCourseCampaign);
-router.get('/campaigns/userscount/:campaign_id', authenticateToken, CampaignController.getTotalCampaignUser);
+router.get('/campaigns/userscount/:client_id/:user_id', authenticateToken, CampaignController.getTotalCampaignUser);
+router.get('/users/not/:client_id', authenticateToken, CampaignController.getUsersNotAsignado);
 router.get('/:id', authenticateToken, CampaignController.getCampaignById);
 router.post('/', authenticateToken, CampaignController.createCampaign);
 router.put('/:id', authenticateToken, CampaignController.updateCampaign);

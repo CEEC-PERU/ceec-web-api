@@ -23,6 +23,28 @@ exports.createCampaignUser = async (req, res) => {
   }
 };
 
+
+
+exports.postCampaignsStudents = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { course_student_list } = req.body;
+    if (!Array.isArray(course_student_list)) throw new Error('Invalid request');
+    const courseStudents = await Promise.all(course_student_list.map(async (course_student) => {
+      await campaignUserService.saveCampaignStudent(course_student);
+    }));
+
+    if (courseStudents) {
+      res.status(200).json({ message: 'Estudiantes agregados satisfactoriamente' });
+    } else {
+      throw new Error('Los estudiantes no fueron agregados');
+    };
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: error.message });
+  }
+}
+
 exports.getCampaignUser = async (req, res) => {
   try {
     const id = req.params.id;

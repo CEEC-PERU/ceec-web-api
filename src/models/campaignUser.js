@@ -30,14 +30,6 @@ const CampaignUser = sequelize.define('CamapaignUser', {
   updated_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
-  },
-  id_state: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: State,
-      key: 'id_state'
-    }
   }
 }, {
   tableName: 'campaign_user',
