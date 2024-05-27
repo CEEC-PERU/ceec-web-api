@@ -1,5 +1,5 @@
 const userService = require('../../services/users/userService');
-
+const ranking = require('../../services/campaign/RankingClientService');
 async function createUser(req, res) {
   try {
     const userData = req.body;
@@ -82,21 +82,54 @@ async function getAllUsers(req, res) {
 }
 
 
+
 async function getCourseStudentsStatistics(req, res) {
   try {
     const { client_id } = req.params; 
    /* const courseStudents = await userService.getAllCourseStudentsWithDetails();*/
     const totalStudents = await userService.getStudentsQuantity(client_id);
-    //const approvedStudents = courseStudents.filter(student => student.is_approved === true).length;
-   /* const inProgressStudents = courseStudents.filter(student => parseFloat(student.progress) > 0 && parseFloat(student.progress) < 1).length;*/
-    //const disapprovedStudents = courseStudents.filter(student => student.is_approved !== true).length;
-/*
-    const usersWithDisapprovedCourses = courseStudents.reduce((acc, student) => {
-      if (student.is_approved === false) {
-        acc[student.user_id] = true;
+    const info = await ranking.getAverageScoresByClient(client_id);
+    // Inicializamos los contadores de estudiantes
+    let approvedStudents = 0;
+    let inProgressStudents = 0;
+    let disapprovedStudents = 0;
+    
+    // Iteramos sobre cada estudiante
+    info.forEach(student => {
+      // Inicializamos contadores para los estados de los cursos
+      let approvedCount = 0;
+      let inProgressCount = 0;
+      let disapprovedCount = 0;
+    
+      // Iteramos sobre cada campaña del estudiante
+      student.Campaigns.forEach(campaign => {
+        // Iteramos sobre cada curso de la campaña
+        campaign.Courses.forEach(course => {
+          // Comprobamos el estado del curso y ajustamos los contadores
+          if (course.status === "Aprobado") {
+            approvedCount++;
+          } else if (course.status === "Pendiente") {
+            inProgressCount++;
+          } else if (course.status === "Desaprobado") {
+            disapprovedCount++;
+          }
+        });
+      });
+    
+      // Determinamos el estado predominante del estudiante
+      if (approvedCount >= inProgressCount && approvedCount >= disapprovedCount) {
+        approvedStudents++;
+      } else if (inProgressCount >= approvedCount && inProgressCount >= disapprovedCount) {
+        inProgressStudents++;
+      } else {
+        disapprovedStudents++;
       }
-      return acc;
-    }, {});*/
+    });
+    // Calcular los porcentajes
+  // Calcular los porcentajes y redondear a dos decimales
+const approvedPercentage = ((approvedStudents / totalStudents) * 100).toFixed(2);
+const inProgressPercentage = ((inProgressStudents / totalStudents) * 100).toFixed(2);
+const disapprovedPercentage = ((disapprovedStudents / totalStudents) * 100).toFixed(2);
     /*
     const disapprovedStudents = Object.keys(usersWithDisapprovedCourses).length;
     const approvedPercentage = 10;//(approvedStudents * totalStudents) // 100;
@@ -104,9 +137,9 @@ async function getCourseStudentsStatistics(req, res) {
     const disapprovedPercentage = 10;//disapprovedStudents  ;*/
     res.json({
       totalStudents,
-     /* approvedPercentage,
+     approvedPercentage,
       inProgressPercentage,
-      disapprovedPercentage,*/
+      disapprovedPercentage,
     });
   } catch (error) {
     console.error(error);

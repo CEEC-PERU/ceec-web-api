@@ -47,6 +47,21 @@ exports.getCampaignUser = async (id) => {
   }
 };
 
+//filtrar por user_id
+exports.getCampaignByUserId = async (user_id) => {
+  try {
+    return await CampaignUser.findAll(user_id)({
+    include: [{ 
+      model: Campaign ,
+      attributes: ['name',  'limit_date'],
+    }],
+  });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 exports.saveCampaignStudent = async (course_student) => {
   try {
     const courseStudent = await CampaignUser.create(course_student);

@@ -13,6 +13,7 @@ const { sequelize } = require('../../config/database');
 const Campaign = require('../../models/campaignModel');
 const Client = require('../../models/ClientModel');
 
+
 const getAverageScoresByClient = async (client_id) => {
     try {
         // Recuperar todos los usuarios de campañas asociados con el cliente dado

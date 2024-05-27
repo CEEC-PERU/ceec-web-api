@@ -14,6 +14,22 @@ exports.getCampaignUserWithCourses  = async (req, res) => {
   }
 };
 
+
+exports.getCampaignByUserId = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const result = await campaignUserService.getCampaignByUserId(user_id);
+    if (!result) {
+      return res.status(404).json({ message: 'User not found or not associated with any campaign' });
+    }
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 exports.createCampaignUser = async (req, res) => {
   try {
     const campaignUser = await campaignUserService.createCampaignUser(req.body);

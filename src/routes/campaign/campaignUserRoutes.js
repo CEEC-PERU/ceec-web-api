@@ -8,6 +8,8 @@ router.get('/courses/:user_id', authenticateToken, campaignUserController.getCam
 router.post('/', authenticateToken, campaignUserController.createCampaignUser);
 router.post('/campaignsusers', authenticateToken, campaignUserController.postCampaignsStudents);
 router.get('/:id', authenticateToken, campaignUserController.getCampaignUser);
+//corregir
+//router.get('/campaign/user/:user_id', authenticateToken, campaignUserController.getCampaignByUserId );
 router.put('/:id', authenticateToken, campaignUserController.updateCampaignUser);
 router.delete('/:id', authenticateToken, campaignUserController.deleteCampaignUser);
 

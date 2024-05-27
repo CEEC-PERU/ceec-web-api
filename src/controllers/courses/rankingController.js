@@ -2,6 +2,7 @@
 const rankingService = require('../../services/courses/rankingService');
 const rankingService2 = require('../../services/campaign/RankingCampaignServicev2');
 const rankingServiceData = require('../../services/campaign/RankingClientService.js');
+const rankingStudent = require('../../services/courses/rankingStudent.js');
 const excel = require('exceljs');
 const getAverageScores = async (req, res) => {
   const { course_id , client_id} = req.params;
@@ -14,6 +15,45 @@ const getAverageScores = async (req, res) => {
 };
 
 
+
+const getRankingStudent = async (req, res) => {
+  const { user_id, course_id, client_id } = req.params;
+  try {
+    // Obtener los puntajes promedio ordenados por average_score
+    const averageScores = await rankingStudent.getAverageScoresByCourseAndUser(course_id, client_id);
+    // Buscar el índice del estudiante en el array de averageScores
+    const studentIndex = averageScores.findIndex(score => score.user_id === parseInt(user_id));
+
+    // Verificar si el estudiante se encontró en el ranking
+    if (studentIndex !== -1) {
+      // Calcular el puesto del estudiante sumando 1 al índice
+      const studentRanking = studentIndex + 1;
+    
+      // Devolver los datos del estudiante junto con su puesto en el ranking
+      res.json({
+        ranking: studentRanking // Agregar el puesto en el ranking
+      });
+    } else {
+      // Si el estudiante no se encontró en el ranking, devolver un mensaje personalizado
+      res.json({
+        message: "El estudiante no se encuentra en el ranking para este curso."
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const getDataGeneral = async (req, res) => {
+  const {  client_id} = req.params;
+  try {
+    const averageScores = await rankingServiceData.getAverageScoresByClient( client_id);
+    res.json(averageScores);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 const getAverageCoursebyStudent = async (req, res) => {
     const { course_id, user_id } = req.params;
     try {
@@ -115,14 +155,17 @@ const generateExcelCampaign = async (req, res, next) => {
 };
 
 
+
 const generateExcelDataGeneral = async (req, res, next) => {
   try {
     const { client_id } = req.params;
     const results = await rankingServiceData.getAverageScoresByClient( client_id);
 
+
     if (!results || results.length === 0) {
       return res.status(404).json({ message: 'No se encontraron resultados para la campaña especificada' });
     }
+
 
     const workbook = new excel.Workbook();
     const worksheet = workbook.addWorksheet('ResultadosCampaign');
@@ -177,5 +220,5 @@ const generateExcelDataGeneral = async (req, res, next) => {
   }
 };
 
-module.exports = { getAverageScores, generateExcel , getAverageCoursebyStudent , generateExcelCampaign , generateExcelDataGeneral};
+module.exports = { getAverageScores, getRankingStudent ,  generateExcel , getAverageCoursebyStudent , generateExcelCampaign , generateExcelDataGeneral , getDataGeneral};
 

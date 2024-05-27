@@ -6,6 +6,8 @@ const rankingCampEvaController = require('../../controllers/campaign/RankingCamp
 const authenticateToken = require('../../middlewares/authenticationMiddleware');
 
 router.get('/:course_id/:client_id', rankingController.getAverageScores);
+
+router.get('/studentranking/:user_id/:course_id/:client_id', rankingController.getRankingStudent);
 //obtener por course_id  y user_id  lista de evaluaciones y prequizz por ususario
 router.get('/student/:course_id/:user_id', rankingController.getAverageCoursebyStudent);
 //antes
@@ -29,6 +31,7 @@ router.get('/excel/campaign/:campaign_id/:client_id',rankingController.generateE
 
 //obtener toda la data  por client_id , excel 
 router.get('/excel/general/info/:client_id', rankingController.generateExcelDataGeneral);
-
+//obtener toda la data  por client_id , json
+router.get('/general/info/:client_id', rankingController.getDataGeneral);
 
 module.exports = router;
