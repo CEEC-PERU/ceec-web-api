@@ -1,6 +1,5 @@
-
 const Module = require('../../models/moduleModel');
-const Course = require('../../models/courseModel'); 
+const Course = require('../../models/courseModel');
 
 const customModuleController = {};
 
@@ -8,7 +7,7 @@ const customModuleController = {};
 customModuleController.getModulesByCourse = async (req, res) => {
   try {
     const courseId = req.params.courseId; // ID del curso desde los parámetros de la solicitud
-    // Busca el curso por su ID 
+    // Busca el curso por su ID
     const course = await Course.findByPk(courseId);
     if (!course) {
       return res.status(404).json({ message: 'Curso no encontrado' });
@@ -18,6 +17,7 @@ customModuleController.getModulesByCourse = async (req, res) => {
       where: {
         course_id: courseId,
       },
+      order: [['order', 'ASC']],
     });
     res.json(modules);
   } catch (error) {
