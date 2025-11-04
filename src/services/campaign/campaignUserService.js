@@ -31,6 +31,15 @@ exports.getCampaignUserWithCourses = async (userId) => {
 
 exports.createCampaignUser = async (campaignUser) => {
   try {
+    const existingCampaignUser = await CampaignUser.findOne({
+      where: { 
+        user_id: campaignUser.user_id,
+        campaign_id: campaignUser.campaign_id 
+      }
+    })
+    if (existingCampaignUser) {
+      throw new Error('El usuario ya está asignado a esta campaña');
+    }
     return await CampaignUser.create(campaignUser);
   } catch (error) {
     console.error(error);
